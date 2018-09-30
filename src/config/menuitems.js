@@ -3,6 +3,11 @@ export default{
 
 highlevel:[
 
+    {
+        name:'dashboard',
+        label:'仪表盘'
+        },    
+
 {
 name:'loanquery',
 label:'添加Vhost'
@@ -29,8 +34,8 @@ label:'业务锁查询'
 
 lowlevel:[
 {
-name:'paystatusquery',
-label:'查询支付结果'
+name:'servicemgmt',
+label:'服务管理'
 
 }
 

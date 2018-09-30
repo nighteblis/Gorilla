@@ -1,19 +1,12 @@
 <template>
     <div>
     
-        <Input v-model="accountloankey" placeholder="输入账务借款Key" style="width: 300px" />
-
-        <Button type="primary" @click="handleSubmit(false)"> 查询借款还款计划 </Button>
-    
         <br/>
         <noticeinformation ref="noticeinformation"></noticeinformation>
         <br/>
         
-        <Table border :columns="columns2" :data="data2"></Table>
+        <Table border :columns="services" :data="servicesdata"></Table>
 
-        <Divider />
-    
-        <Table border :columns="columns" :data="data"></Table>
     
                 
     </div>
@@ -21,75 +14,79 @@
 <script>
     export default {
     
-        name: 'accountqueryloanplan',
+        name: 'servicemgmt',
+        description:'',
     
         data() {
     
             return {
+
+    
+                msg: 'service mgmt',
     
     
+                servicesdata: [],
     
-                transformdate: '',
+                services: [
+
+                      {
     
-                msg: 'accountqueryloanplan',
+                        title: '名称',
     
-                accountloankey: '',
+                        key: 'name'
     
-                data: [],
+                    },
+
+                                        {
     
-                columns: [{
+                        title: 'ID',
+                        key: 'id',
+
+                        width:290
     
-                        title: '期次',
+                    },
+    {
+                        title: '服务器',
     
-                        key: 'period',
+                        key: 'host',
     
-                        width: 50,
+                        width: 200,
     
-                        fixed: 'left'
     
                     },
     
+
+    
                     {
     
-                        title: '状态',
+                        title: '链接超时',
     
-                        key: 'status',
+                        key: 'connect_timeout',
     
-                        fixed: 'left',
     
                         width: 100
     
                     },
     
+
+    
                     {
     
-                        title: '还款日',
+                        title: '协议',
     
-                        key: 'due_date',
+                        key: 'protocol',
     
-                        fixed: 'left',
-    
-                        width: 100
+                        width: 90
     
                     },
     
-                    {
-    
-                        title: '还款类型',
-    
-                        key: 'repay_type',
-    
-                        fixed: 'left',
-    
-                        width: 80
-    
-                    },
+
     
                     {
     
-                        title: '本金',
+                        title: '读取超时',
     
-                        key: 'principal',
+                        key: 'read_timeout',
     
                         width: 90
     
@@ -97,9 +94,38 @@
     
                     {
     
-                        title: '利息',
+                        title: '端口',
     
-                        key: 'interest',
+                        key: 'port',
+    
+                        width: 100
+    
+    
+    
+                    },
+    
+                    {
+    
+                        title: '路径',
+    
+                        key: 'path',
+    
+                        width: 100
+    
+                    }, {
+    
+                        title: '更新时间',
+    
+                        key: 'updated_at',
+    
+                        width: 100
+    
+                    },                    {
+    
+                        title: '创建时间 ',
+    
+                        key: 'created_at',
+    
     
                         width: 100
     
@@ -107,125 +133,21 @@
     
                     {
     
-                        title: '管理费',
+                        title: '重试',
     
-                        key: 'mgmt_fee',
+                        key: 'retries',
+                         width: 90   
+    
+                    },
+    
+                    {
+    
+                        title: '写超时',
+    
+                        key: 'write_timeout',
     
                         width: 90
-    
                     },
-    
-                    {
-    
-                        title: '其他费用',
-    
-                        key: 'other_fee',
-    
-                        width: 100
-    
-    
-    
-                    },
-    
-                    {
-    
-                        title: '剩余本金',
-    
-                        key: 'left_principal',
-    
-                        width: 100
-    
-                    }, {
-    
-                        title: '剩余利息',
-    
-                        key: 'left_interest',
-    
-                        width: 100
-    
-                    },
-    
-                    {
-    
-                        title: '剩余管理费',
-    
-                        key: 'left_mgmt_fee',
-    
-                        width: 100
-    
-                    },
-    
-                    {
-    
-                        title: '剩余逾期利息',
-    
-                        key: 'left_overdue_interest',
-    
-                        width: 100
-    
-                    },
-    
-                    {
-    
-                        title: '剩余逾期管理费',
-    
-                        key: 'left_overdue_mgmt_fee',
-    
-                        width: 100
-    
-                    },
-    
-                    {
-    
-                        title: '减免本金',
-    
-                        key: 'derate_principal',
-    
-                        width: 100
-    
-                    }, {
-    
-                        title: '减免利息',
-    
-                        key: 'derate_interest',
-    
-                        width: 100
-    
-                    },
-    
-                    {
-    
-                        title: '减免管理费',
-    
-                        key: 'derate_mgmt_fee',
-    
-                        width: 100
-    
-                    },
-    
-                    {
-    
-                        title: '减免逾期利息',
-    
-                        key: 'derate_overdue_interest',
-    
-                        width: 100
-    
-                    },
-    
-                    {
-    
-                        title: '减免逾期管理费',
-    
-                        key: 'derate_overdue_mgmt_fee',
-    
-                        width: 100
-    
-                    },
-    
-    
-    
-    
     
                     {
     
@@ -309,244 +231,44 @@
     
     
     
-                ],
-    
-                data2: [],
-    
-                columns2: [{
-    
-                        title: '金额',
-    
-                        key: 'amount'
-    
-                    },
-    
-                    {
-    
-                        title: '支付渠道',
-    
-                        key: 'pay_channel'
-    
-                    },
-    
-                    {
-    
-                        title: '借款状态',
-    
-                        key: 'status'
-    
-                    },
-    
-                    {
-    
-                        title: '总期数',
-    
-                        key: 'periods'
-    
-                    },
-    
-                    {
-    
-                        title: '剩余期数',
-    
-                        key: 'left_periods'
-    
-                    },
-    
-                    {
-    
-                        title: '是否锁定',
-    
-                        key: 'is_locked'
-    
-                    }
-    
                 ]
     
             }
     
         },
+            created: function () {
+       
+       console.log("dashboard created")
+
+       this.axios.get("http://172.16.2.39:50001/services/")
+    
+                    .then(response => {
+                        if(response.status = "200")
+                        {
+
+                            console.log(response)                            
+                            this.servicesdata =response.data.data
+
+
+                        }
+                        else{
+                            this.$refs.noticeinformation.showalert('error', 'kong 有异常请尽快修复')
+                        }
+                    })
+    
+                    .catch(e => {
+
+                        console.log(e)
+
+                    })
+
+        
+          },
     
         methods: {
     
-    
-    
-            changeDatetoString(date) {
-    
-    
-    
-    
-    
+            changeDatetoString(date) {    
                 return new Date(date)
-    
-    
-    
-            },
-    
-    
-    
-    
-    
-    
-    
-    
-    
-            handleSubmit(showoriginalalert) {
-    
-    
-    
-                if (this.accountloankey == '') {
-    
-    
-    
-                    this.$refs.noticeinformation.showalert('error', '未输入账务借款key')
-    
-    
-    
-                    return
-    
-                }
-    
-    
-    
-    
-    
-                console.log(this)
-    
-                console.log(this.$selectedEnv)
-    
-    
-    
-                var uri = 'http://172.16.2.39:7280/api/sql/' + this.$store.state.selectedEnv + '/account'
-    
-                console.log(uri)
-    
-    
-    
-                this.axios.post(uri, {
-    
-                        "sql": "select * from repay_plan where loan_key = '" + this.accountloankey + "'"
-    
-                    })
-    
-                    .then(response => {
-    
-                        console.log(response)
-    
-    
-    
-                        if (response.data.status != 0) {
-    
-                            this.$refs.noticeinformation.showalert('error', response.data.message)
-    
-                        } else {
-    
-    
-    
-                            response.data.data.forEach(function(element) {
-    
-    
-    
-                                var convertdate = new Date(element.due_date)
-    
-    
-    
-                                element.due_date = convertdate.getFullYear() + '-' + convertdate.getMonth() + '-' + convertdate.getDate()
-    
-    
-    
-                            })
-    
-    
-    
-                            this.data = response.data.data
-    
-                        }
-    
-    
-    
-    
-    
-                    })
-    
-                    .catch(e => {
-    
-    
-    
-                        console.log(e)
-    
-    
-    
-                    })
-    
-    
-    
-                // select from user_loan Table
-    
-    
-    
-                uri = 'http://172.16.2.39:7280/api/sql/' + this.$store.state.selectedEnv + '/account'
-    
-                console.log(uri)
-    
-    
-    
-                this.axios.post(uri, {
-    
-                        "sql": "select * from loan where loan_key = '" + this.accountloankey + "'"
-    
-                    })
-    
-                    .then(response => {
-    
-                        console.log(response)
-    
-    
-    
-                        if (response.data.status != 0) {
-    
-                            this.$refs.noticeinformation.showalert('error', response.data.message)
-    
-                        } else {
-    
-    
-    
-                            if (!showoriginalalert)
-    
-                                this.$refs.noticeinformation.showalert('success', '查询成功')
-    
-    
-    
-                            this.data2 = response.data.data
-    
-                        }
-    
-    
-    
-    
-    
-                    })
-    
-                    .catch(e => {
-    
-    
-    
-                        console.log(e)
-    
-    
-    
-                    })
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
             }
     
     

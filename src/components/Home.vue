@@ -90,6 +90,7 @@ import axios from 'axios';
 import VueAxios from 'vue-axios';
 import testcomponents from '@/components/highlevel/'
 import lowlevelmgmt from '@/components/lowlevel/'
+import dashboard from '@/components/dashboard/'
 
 // 批量注册component
 Object.keys(testcomponents).forEach(
@@ -106,6 +107,16 @@ function importallcomponent(component){
   console.log(lowlevelmgmt[component])
    console.log(lowlevelmgmt[component].name)
   Vue.component(lowlevelmgmt[component].name, lowlevelmgmt[component])
+}
+)
+
+
+// 批量注册component
+Object.keys(dashboard).forEach(
+function importallcomponent(component){
+  console.log(dashboard[component])
+   console.log(dashboard[component].name)
+  Vue.component(dashboard[component].name, dashboard[component])
 }
 )
 
