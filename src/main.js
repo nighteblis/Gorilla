@@ -12,6 +12,7 @@ Vue.use(Vuex)
 
 var store = new Vuex.Store({
   state:{
+    kongAdmin:'http://172.16.2.39:50001',
     alert:{
       success:{
         display:false,
@@ -31,6 +32,7 @@ var store = new Vuex.Store({
 
 })
 
+console.log(store.state.kongAdmin)
 
 new Vue({
   el: '#app',

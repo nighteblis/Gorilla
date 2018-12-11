@@ -5,9 +5,9 @@
 
 <Button type="primary" @click="handleSubmit(false)"> 查询首付款订单 </Button>
 
-</br>
+<br/>
 <noticeinformation ref="noticeinformation"></noticeinformation>
-</br>
+<br/>
 
 <Table border :columns="columns2" :data="data2"></Table>
 

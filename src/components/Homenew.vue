@@ -35,21 +35,18 @@
                   应用
               </template>
                <MenuGroup title="vhosts管理">
-                    <MenuItem v-for="highapis in menutiems.highlevel" :key="highapis.name"  :ref="'menuitem'+highapis.name" :name="highapis.name"> {{highapis.label}} </MenuItem>
+                    <MenuItem v-for="highapis in menutiems.highlevel" :key="highapis.name"  :ref="'menuitem'+highapis.name" :name="highapis.name"> {{highapis.label}} />
                </MenuGroup>
           </Submenu>
-
           <Submenu name="2">
               <template slot="title">
                   <Icon type="logo-usd" />
                   底层接口
               </template>
-  <MenuItem v-for="lowapis in menutiems.lowlevel" :key="lowapis.name"  :ref="'menuitem'+lowapis.name" :name="lowapis.name"> {{lowapis.label}}   </MenuItem>
+  <MenuItem v-for="lowapis in menutiems.lowlevel" :key="lowapis.name"  :ref="'menuitem'+lowapis.name" :name="lowapis.name"> {{lowapis.label}}  />
           </Submenu>
       
       </Menu>
- 
-      
           <Tabs type="card" closable @on-tab-remove="handleTabRemove">
           <TabPane  ref="tabPanes" :key="tab.component" :name="tab.component" :label="tab.label" v-if="tab.display" v-for="tab in tabs" >
 
@@ -84,8 +81,8 @@ import iview from 'iview'
 import noticeinformation from '@/components/common/noticeinformation.vue'
 
 import menuitems from '@/config/menuitems'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
+import axios from 'axios';
+import VueAxios from 'vue-axios';
 import testcomponents from '@/components/highlevel/'
 import lowlevelmgmt from '@/components/lowlevel/'
 import dashboard from '@/components/dashboard/'
@@ -118,7 +115,7 @@ function importallcomponent(component){
 }
 )
 
-Vue.use(VueAxios, axios)
+Vue.use(VueAxios, axios);
 Vue.component("noticeinformation",noticeinformation)
 Vue.use(iview)
 
