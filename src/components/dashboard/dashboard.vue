@@ -4,11 +4,11 @@
 
     <Tabs value="1">
       <TabPane name="1" label="服务器状态">
-        <Table border :columns="serverstatus" :data="serverstatusdata"></Table>
+        <Table height="600" border :columns="serverstatus" :data="serverstatusdata"></Table>
       </TabPane>
 
       <TabPane name="2" label="插件状态">
-        <Table height="500" border :columns="availableplugins" :data="availablepluginsdata"></Table>
+        <Table height="600" border :columns="availableplugins" :data="availablepluginsdata"></Table>
       </TabPane>
     </Tabs>
   </div>
@@ -24,16 +24,16 @@ export default {
       msg: "dashboard ",
       data: null,
       availableplugins: [
-        { title: "plugin", key: "plugin", width: 250 },
-        { width: 100, title: "enable", key: "enable" }
+        { title: "插件", key: "plugin", width: 250 },
+        { title: "启用状态", key: "enable" }
       ],
       availablepluginsdata: [],
       serverstatus: [
-        { title: "item", key: "item", width: 300 },
-        { width: 450, title: "value", key: "value" }
+        { title: "项目", key: "item", width: 300 },
+        {  title: "数值", key: "value"}
       ],
       serverstatusdata: []
-    };
+    }
   },
 
   created: function() {
@@ -58,12 +58,16 @@ export default {
           );
 
           this.availablepluginsdata = newdata;
+
+          console.log(this.availablepluginsdata)
+
           newdata = [];
 
           Object.keys(response.data).forEach(function(key) {
             if (typeof response.data[key] != "object")
               newdata.push({ item: key, value: response.data[key] });
           });
+
           Object.keys(response.data.configuration).forEach(function(key) {
             if (typeof response.data.configuration[key] != "object")
               newdata.push({
@@ -72,6 +76,9 @@ export default {
               });
           });
           this.serverstatusdata = newdata;
+
+          console.log(this.serverstatusdata)
+
           newdata = [];
         } else {
           this.$refs.noticeinformation.showalert(

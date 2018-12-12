@@ -4,7 +4,7 @@
     <noticeinformation ref="noticeinformation"></noticeinformation>
     <br>
 
-    <Table border :columns="services" :data="servicesdata"></Table>
+    <Table border :columns="routes" :data="routesdata"></Table>
 
     <Modal v-model="modal1" title="测试" @on-ok="ok" @on-cancel="cancel">
       <p>Content of dialog</p>
@@ -14,77 +14,85 @@
   </div>
 </template>
 <script>
-
-import kongadmin from '@/components/utils/kongadmin'
-
 export default {
-  name: "servicemgmt",
+  name: "routemgmt",
   description: "",
 
   data() {
     return {
       modal1: false,
-      msg: "service mgmt",
+      msg: "route mgmt",
 
-      servicesdata: [],
+      routesdata: [],
 
-      services: [
-        {
-          title: "名称",
 
-          key: "name"
-        },
-
-        {
-          title: "ID",
+      routes: [
+                {
+          title: "route ID",
           key: "id",
 
           width: 290
         },
-        {
-          title: "服务器",
-
-          key: "host",
-
-          width: 200
-        },
-
-        {
-          title: "链接超时",
-
-          key: "connect_timeout",
-
-          width: 100
-        },
-
-        {
+             {
           title: "协议",
 
-          key: "protocol",
+          key: "protocols",
 
           width: 90
         },
-
         {
-          title: "读取超时",
+          title: "访问主机",
 
-          key: "read_timeout",
+          key: "hosts",
+          width:150
+        },   
+                {
+          title: "请求方法",
 
-          width: 90
-        },
-
-        {
-          title: "端口",
-
-          key: "port",
+          key: "methods",
 
           width: 100
         },
+
 
         {
           title: "路径",
 
           key: "path",
+
+          width: 100
+        },
+
+        {
+          title: "关联服务",
+
+          key: "service",
+
+          width: 200
+        },
+
+
+
+        {
+          title: "strip path",
+
+          key: "strip_path",
+
+          width: 90
+        },
+
+        {
+          title: "regex priority",
+
+          key: "regex_priority",
+
+          width: 100
+        },
+
+        {
+          title: "preserve host",
+
+          key: "preserve_host",
 
           width: 100
         },
@@ -101,21 +109,6 @@ export default {
           key: "created_at",
 
           width: 100
-        },
-
-        {
-          title: "重试",
-
-          key: "retries",
-          width: 90
-        },
-
-        {
-          title: "写超时",
-
-          key: "write_timeout",
-
-          width: 90
         },
 
         {
@@ -181,25 +174,29 @@ export default {
     };
   },
   created: function() {
+    console.log("dashboard created")
 
-     var success = function (response,component){
-        console.log(component)
-        component.servicesdata = response.data.data
-     }
+    this.axios
+      .get(this.$store.state.kongAdmin + "/routes/")
 
-     var fail = function (response,component){
-        component.$refs.noticeinformation.showalert(
+      .then(response => {
+        if ((response.status = "200")) {
+          console.log(response)
+          this.routesdata = response.data.data
+        } else {
+          this.$refs.noticeinformation.showalert(
             "error",
-             "kong 有异常请尽快修复"
-           )
-     }
-    kongadmin.getServices(success,fail,this)
+            "kong 有异常请尽快修复"
+          );
+        }
+      })
 
+      .catch(e => {
+        console.log(e)
+      })
   },
 
   methods: {
-
-
     ok() {
       this.$Message.info("Clicked ok")
     },

@@ -66,7 +66,7 @@ export default {
           title: "备注",
           key: "comments",
           render: (h, params) => {
-            return h("div", ["2:成功 0:初始化 1:处理中 其他:失败"]);
+            return h("div", ["2:成功 0:初始化 1:处理中 其他:失败"])
           }
         },
 
@@ -89,7 +89,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.initpaymentstatus(params);
+                      this.initpaymentstatus(params)
                     }
                   }
                 },
@@ -107,7 +107,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.initaccountreportstatus(params);
+                      this.initaccountreportstatus(params)
                     }
                   }
                 },
@@ -166,7 +166,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.initjob(params);
+                      this.initjob(params)
                     }
                   }
                 },
@@ -184,7 +184,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.failjob(params);
+                      this.failjob(params)
                     }
                   }
                 },
@@ -199,15 +199,15 @@ export default {
 
   methods: {
     closealert(event) {
-      console.log(event);
+      console.log(event)
     },
 
     initpaymentstatus(params) {
       var uri =
         "http://172.16.2.39:7280/api/sql/" +
         this.$store.state.selectedEnv +
-        "/proxy";
-      console.log(uri);
+        "/proxy"
+      console.log(uri)
 
       this.axios
         .post(uri, {
@@ -217,24 +217,24 @@ export default {
             "'"
         })
         .then(response => {
-          console.log(response);
-          if (response.data.count <= 0 || response.data.status != 0) {
-            this.showalert("alert", response.data.message);
+          console.log(response)
+          if (response.data.count <= 0 || response.data.status !== 0) {
+            this.showalert("alert", response.data.message)
           } else {
-            this.showalert("success", "执行成功");
-            this.handleSubmit(true);
+            this.showalert("success", "执行成功")
+            this.handleSubmit(true)
           }
         })
         .catch(e => {
-          console.log(e);
-        });
+          console.log(e)
+        })
     },
     initaccountreportstatus(params) {
       var uri =
         "http://172.16.2.39:7280/api/sql/" +
         this.$store.state.selectedEnv +
-        "/proxy";
-      console.log(uri);
+        "/proxy"
+      console.log(uri)
 
       this.axios
         .post(uri, {
@@ -244,38 +244,38 @@ export default {
             "'"
         })
         .then(response => {
-          console.log(response);
-          if (response.data.count <= 0 || response.data.status != 0) {
-            this.showalert("alert", response.data.message);
+          console.log(response)
+          if (response.data.count <= 0 || response.data.status !== 0) {
+            this.showalert("alert", response.data.message)
           } else {
-            this.showalert("success", "执行成功");
-            this.handleSubmit(true);
+            this.showalert("success", "执行成功")
+            this.handleSubmit(true)
           }
         })
         .catch(e => {
-          console.log(e);
-        });
+          console.log(e)
+        })
     },
 
     showalert(alert, message) {
-      this.alert.success.display = false;
-      this.alert.warning.display = false;
-      this.alert.error.display = false;
-      this.alert[alert].message = message;
-      this.alert[alert].display = true;
+      this.alert.success.display = false
+      this.alert.warning.display = false
+      this.alert.error.display = false
+      this.alert[alert].message = message
+      this.alert[alert].display = true
     },
 
     disappearalert(alert) {
-      this.alert[alert].display = false;
+      this.alert[alert].display = false
     },
 
     initjob(params) {
-      console.log(params.row.id);
+      console.log(params.row.id)
       var uri =
         "http://172.16.2.39:7280/api/sql/" +
         this.$store.state.selectedEnv +
-        "/proxy";
-      console.log(uri);
+        "/proxy"
+      console.log(uri)
 
       this.axios
         .post(uri, {
@@ -285,26 +285,26 @@ export default {
             ""
         })
         .then(response => {
-          console.log(response);
-          if (response.data.count <= 0 || response.data.status != 0) {
-            this.showalert("alert", response.data.message);
+          console.log(response)
+          if (response.data.count <= 0 || response.data.status !== 0) {
+            this.showalert("alert", response.data.message)
           } else {
-            this.showalert("success", "执行成功");
-            this.handleSubmit(true);
+            this.showalert("success", "执行成功")
+            this.handleSubmit(true)
           }
         })
         .catch(e => {
-          console.log(e);
-        });
+          console.log(e)
+        })
     },
 
     failjob(params) {
-      console.log(params.row.id);
+      console.log(params.row.id)
       var uri =
         "http://172.16.2.39:7280/api/sql/" +
         this.$store.state.selectedEnv +
-        "/proxy";
-      console.log(uri);
+        "/proxy"
+      console.log(uri)
 
       this.axios
         .post(uri, {
@@ -314,34 +314,34 @@ export default {
             ""
         })
         .then(response => {
-          console.log(response);
-          if (response.data.count <= 0 || response.data.status != 0) {
-            this.showalert("alert", response.data.message);
+          console.log(response)
+          if (response.data.count <= 0 || response.data.status !== 0) {
+            this.showalert("alert", response.data.message)
           } else {
-            this.showalert("success", "执行成功");
-            this.handleSubmit(true);
+            this.showalert("success", "执行成功")
+            this.handleSubmit(true)
           }
         })
         .catch(e => {
-          console.log(e);
-        });
+          console.log(e)
+        })
     },
 
     handleSubmit(showoriginalalert) {
       if (this.partnerloanno == "") {
-        this.showalert("error", "未输入三方借款编号或者账单编号");
+        this.showalert("error", "未输入三方借款编号或者账单编号")
 
-        return;
+        return
       }
 
-      console.log(this);
-      console.log(this.$selectedEnv);
+      console.log(this)
+      console.log(this.$selectedEnv)
 
       var uri =
         "http://172.16.2.39:7280/api/sql/" +
         this.$store.state.selectedEnv +
-        "/proxy";
-      console.log(uri);
+        "/proxy"
+      console.log(uri)
 
       this.axios
         .post(uri, {
@@ -351,26 +351,25 @@ export default {
             "')"
         })
         .then(response => {
-          console.log(response);
+          console.log(response)
 
           if (response.data.status != 0) {
-            this.showalert("error", response.data.message);
+            this.showalert("error", response.data.message)
           } else {
-            if (!showoriginalalert) this.showalert("success", "查询成功");
-            this.data = response.data.data;
+            if (!showoriginalalert) this.showalert("success", "查询成功")
+            this.data = response.data.data
           }
         })
         .catch(e => {
-          console.log(e);
-        });
-
+          console.log(e)
+        })
       // select from user_loan Table
 
       uri =
         "http://172.16.2.39:7280/api/sql/" +
         this.$store.state.selectedEnv +
-        "/proxy";
-      console.log(uri);
+        "/proxy"
+      console.log(uri)
 
       this.axios
         .post(uri, {
@@ -380,22 +379,22 @@ export default {
             "') as ul  left join  user_bill ub on ul.user_bill_id = ub.id ) as newtable "
         })
         .then(response => {
-          console.log(response);
+          console.log(response)
 
-          if (response.data.status != 0) {
-            this.showalert("error", response.data.message);
+          if (response.data.status !== 0) {
+            this.showalert('error', response.data.message)
           } else {
-            if (!showoriginalalert) this.showalert("success", "查询成功");
+            if (!showoriginalalert) this.showalert('success', '查询成功')
 
-            this.userloandata = response.data.data;
+            this.userloandata = response.data.data
           }
         })
         .catch(e => {
-          console.log(e);
-        });
+          console.log(e)
+        })
     }
   }
-};
+}
 </script>
 <style scoped>
 </style>

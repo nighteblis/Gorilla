@@ -66,7 +66,7 @@
 
 <div id="footer">
 <Divider />
-@Core System QA
+nighteblis@hotmail.com
 </div>
 
   </div>

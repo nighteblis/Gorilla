@@ -129,9 +129,9 @@ export default {
       var uri =
         "http://172.16.2.39:7280/api/sql/" +
         this.$store.state.selectedEnv +
-        "/proxy";
+        "/proxy"
 
-      console.log(uri);
+      console.log(uri)
 
       this.axios
         .post(uri, {
@@ -142,38 +142,38 @@ export default {
         })
 
         .then(response => {
-          console.log(response);
+          console.log(response)
 
           if (response.data.status != 0) {
             this.$refs.noticeinformation.showalert(
               "error",
               response.data.message
-            );
+            )
           } else {
-            this.$refs.noticeinformation.showalert("success", "查询成功");
+            this.$refs.noticeinformation.showalert("success", "查询成功")
 
-            this.data = response.data.data;
+            this.data = response.data.data
           }
         })
 
         .catch(e => {
-          console.log(e);
-        });
+          console.log(e)
+        })
     },
 
     queryloansbill() {
       if (this.partnerloanno == "") {
         this.$refs.noticeinformation.showalert("error", "未输入三方借款编号");
 
-        return;
+        return
       }
 
       var uri =
         "http://172.16.2.39:7280/api/sql/" +
         this.$store.state.selectedEnv +
-        "/proxy";
+        "/proxy"
 
-      console.log(uri);
+      console.log(uri)
 
       this.axios
         .post(uri, {
@@ -184,26 +184,26 @@ export default {
         })
 
         .then(response => {
-          console.log(response);
+          console.log(response)
 
           if (response.data.status != 0) {
             this.$refs.noticeinformation.showalert(
               "error",
               response.data.message
-            );
+            )
           } else {
             this.$refs.noticeinformation.showalert("success", "查询成功");
 
-            this.data2 = response.data.data;
+            this.data2 = response.data.data
           }
         })
 
         .catch(e => {
-          console.log(e);
-        });
+          console.log(e)
+        })
     }
   }
-};
+}
 </script>
 <style scoped>
 code {

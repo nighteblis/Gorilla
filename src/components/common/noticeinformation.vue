@@ -29,14 +29,14 @@ export default {
   },
   methods: {
     showalert(alert, message) {
-      this.alert.success.display = false;
-      this.alert.warning.display = false;
-      this.alert.error.display = false;
-      this.alert[alert].message = message;
-      this.alert[alert].display = true;
+      this.alert.success.display = false
+      this.alert.warning.display = false
+      this.alert.error.display = false
+      this.alert[alert].message = message
+      this.alert[alert].display = true
     }
   }
-};
+}
 </script>
 <style scoped>
 </style>
