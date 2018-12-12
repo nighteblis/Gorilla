@@ -15,7 +15,7 @@
 </template>
 <script>
 
-import kongadmin from '@/components/utils/kongadmin'
+import kongadmin from '@/utils/kongadmin'
 
 export default {
   name: "servicemgmt",
@@ -136,7 +136,6 @@ export default {
                 {
                   props: {
                     type: "primary",
-
                     size: "small"
                   },
 
