@@ -16,49 +16,40 @@
 
     <Modal v-model="addPluginWindow" title="添加插件" width="600" @on-ok="addPluginConfirm" @on-cancel="addPluginCancel">
 
-          <Row>
-        启用插件名称：
-               <Col span="12"  >
-             <Select v-model="pluginName" filterable>
-                <Option v-for="item in pluginNames" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
-            </Col>
-         </Row>
-         
-        <Row>
-         针对服务和路由：
-               <Col span="12"  >
-              <Select  v-model="serviceId" filterable>
-                <Option v-for="item in serviceslist" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
-                <Select  v-model="routeId" filterable>
-                <Option v-for="item in routeslist" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
-            </Col>
-         </Row>
 
-        <Row>
-         针对消费者：
-               <Col span="12" >
+    <Form ref="formInline"  >
+
+        <FormItem prop="user" label="启用插件名称：">
+        <pluginselector   ref="pluginSelected"></pluginselector>
+        </FormItem>
+
+        <FormItem prop="user" label="针对服务和路由（二选一或者全部选择）：">
+          <serviceselector ref="serviceSelected"></serviceselector>
+          <routeselector ref="routeSelected"></routeselector>
+        </FormItem>
+        <FormItem prop="user" label="针对消费者：">
               <Select  v-model="consumerId" filterable>
                 <Option v-for="item in rcomsumerslist" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
-            </Col>
-         </Row>
+        </FormItem>
 
-       <div>
-       插件配置：
-
+        <FormItem label="插件配置：">
        <Input v-model="pluginConfig" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter configs">
        </Input>
+        </FormItem>
 
-    </div> 
+    </Form>
+
 
     </Modal>
 
   </div>
 </template>
 <script>
+
+
+import kongadmin from '@/utils/kongadmin'
+
 export default {
   name: "pluginmgmt",
   description: "",
@@ -68,12 +59,9 @@ export default {
       modal1: false,
       addPluginWindow:false,
       msg: 'plugin mgmt',
-      pluginName:'',
-      serviceId:'',
-      routeId:'',
       consumerId:'',
       pluginConfig:'',
-
+      pluginname:'',
       pluginNames:[{value:'pre-function',label:'pre-function'}],
 
       serviceslist:[],
@@ -97,52 +85,46 @@ export default {
 
           width: 290
         },
-        {
-          title: "服务器",
 
-          key: "host",
-
-          width: 200
-        },
 
         {
-          title: "链接超时",
+          title: "是否启用",
 
-          key: "connect_timeout",
+          key: "enabled",
 
           width: 100
         },
 
         {
-          title: "协议",
+          title: "路由Id",
 
-          key: "protocol",
+          key: "route_id",
 
           width: 90
         },
 
         {
-          title: "读取超时",
+          title: "服务Id",
 
-          key: "read_timeout",
+          key: "service_id",
 
           width: 90
         },
 
         {
-          title: "端口",
+          title: "消费者Id",
 
-          key: "port",
+          key: "consumer_id",
 
           width: 100
         },
 
         {
-          title: "路径",
+          title: "配置内容",
 
-          key: "path",
+          key: "config",
 
-          width: 100
+          width: 300
         },
         {
           title: "更新时间",
@@ -157,21 +139,6 @@ export default {
           key: "created_at",
 
           width: 100
-        },
-
-        {
-          title: "重试",
-
-          key: "retries",
-          width: 90
-        },
-
-        {
-          title: "写超时",
-
-          key: "write_timeout",
-
-          width: 90
         },
 
         {
@@ -237,25 +204,27 @@ export default {
     }
   },
   created: function() {
-    console.log("dashboard created")
-    this.axios
-      .get(this.$store.state.kongAdmin + "/plugins/")
 
-      .then(response => {
-        if ((response.status = "200")) {
-          console.log(response)
-          this.servicesdata = response.data.data
-        } else {
-          this.$refs.noticeinformation.showalert(
+    
+    console.log("route mgmt created")
+
+
+     var success = function (response,component){
+        console.log(component)
+        component.servicesdata = response.data.data
+     }
+
+     var fail = function (response,component){
+       console.log('fail function')
+       console.log(response)
+        component.$refs.noticeinformation.showalert(
             "error",
-            "kong 有异常请尽快修复"
-          );
-        }
-      })
+             "kong 有异常请尽快修复"
+           )
+     }
+    kongadmin.getWorkingPlugins(success,fail,this)
 
-      .catch(e => {
-        console.log(e)
-      })
+
   },
 
   methods: {
@@ -263,31 +232,36 @@ export default {
     addPluginConfirm() {
 
   var uri = this.$store.state.kongAdmin +'/plugins/'
-  console.log(this.serviceId)
-  console.log(this.routeId)
-  console.log(this.consumerId)
-  console.log(this.pluginName)
 
-  var s1= this.serviceId === '' ?  '' : 'service_id='+this.serviceId
-  var s2= this.routeId === '' ?  '' : 'route_id='+this.routeId
-  var s3= this.consumerId === '' ?  '' : 'consumer_id='+this.consumerId
-  var s4= this.pluginName === '' ? '':'name='+this.pluginName
-  var s5=this.pluginConfig === '' ? '':this.pluginConfig
+
+  console.log(this.$refs)
+  console.log("====")
+
+  console.log(this.$refs.serviceSelected.serviceId)
+  console.log(this.$refs.routeSelected.routeId)
+  console.log(this.$refs.pluginSelected.pluginName)
+  console.log(this.pluginConfig)
+
+  // var s1= this.serviceId === '' ?  '' : 'service_id='+this.serviceId
+  // var s2= this.routeId === '' ?  '' : 'route_id='+this.routeId
+  // var s3= this.consumerId === '' ?  '' : 'consumer_id='+this.consumerId
+  // var s4= this.pluginName === '' ? '':'name='+this.pluginName
+  // var s5=this.pluginConfig === '' ? '':this.pluginConfig
 
 
   console.log(uri)
 
-  this.axios.post(uri,this.checkAndGenerateWwwData(s1,s2,s3,s4,s5),{headers: {'content-type': 'application/x-www-form-urlencoded'}})
+  this.axios.post(uri,this.checkAndGenerateWwwData(this.$refs.serviceSelected.serviceId,this.$refs.routeSelected.routeId,this.$refs.pluginSelected.pluginName,this.pluginConfig,consumerId),{headers: {'content-type': 'application/x-www-form-urlencoded'}})
  .then(response => {
  console.log(response)
 
  if( response.data.status != 0 ) {
-     this.$Message.info("error ?")
+     this.$Message.info("添加插件出错")
  }
  else
  {
      if(!showoriginalalert)
-    this.$Message.info("Clicked ok")
+    this.$Message.info("添加成功")
 
  }
 
@@ -318,13 +292,46 @@ export default {
       console.log('add plugin...')
       this.addPluginWindow = true
 
+
+    var success1 = function (response,component){
+     //   component.servicesdata = response.data.data
+        console.log(component.servicesdata)
+     }
+
+     var fail = function (response,component){
+        component.$refs.noticeinformation.showalert(
+            "error",
+             "获取插件列表异常"
+           )
+     }
+    kongadmin.getServices(success1,fail,this)
+     
+
+     var success2 = function (response,component){
+        console.log(component)
+       // component.routesdata = response.data.data
+     }
+
+
+    kongadmin.getRoutes(success2,fail,this)
+
+     var success3 = function (response,component){
+        console.log(component)
+       // component.routesdata = response.data.data
+     }
+
+    kongadmin.getConsumers(success3,fail,this)
+
+
+
+
     },
         checkAndGenerateWwwData(){
 
          var returnstring = ''
          for (var i = 0; i < arguments.length; i++) {
             console.log(arguments[i]);
-            if(arguments[i] === '' ) 
+            if(arguments[i] === '' || arguments[i] == null ) 
             {
                 continue       
             }

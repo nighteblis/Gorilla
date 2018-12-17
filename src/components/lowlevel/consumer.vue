@@ -18,7 +18,7 @@
 import kongadmin from '@/utils/kongadmin'
 
 export default {
-  name: "servicemgmt",
+  name: "consumermgmt",
   description: "",
 
   data() {
@@ -192,12 +192,11 @@ export default {
              "kong 有异常请尽快修复"
            )
      }
-    kongadmin.getServices(success,fail,this)
+    kongadmin.getConsumers(success,fail,this)
 
   },
 
   methods: {
-
 
     ok() {
       this.$Message.info("Clicked ok")

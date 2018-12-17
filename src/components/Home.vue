@@ -75,7 +75,7 @@
 import Vue from "vue"
 import "iview/dist/styles/iview.css"
 import iview from "iview"
-import noticeinformation from "@/components/common/noticeinformation.vue"
+// import noticeinformation from "@/components/common/noticeinformation.vue"
 
 import menuitems from "@/config/menuitems"
 import axios from "axios"
@@ -83,6 +83,15 @@ import VueAxios from "vue-axios"
 import testcomponents from "@/components/highlevel/"
 import lowlevelmgmt from "@/components/lowlevel/"
 import dashboard from "@/components/dashboard/"
+import commons from "@/components/common/"
+
+
+// 批量注册component
+Object.keys(commons).forEach(function importallcomponent(component) {
+  console.log(commons[component])
+  console.log(commons[component].name)
+  Vue.component(commons[component].name, commons[component])
+});
 
 // 批量注册component
 Object.keys(testcomponents).forEach(function importallcomponent(component) {
@@ -106,7 +115,6 @@ Object.keys(dashboard).forEach(function importallcomponent(component) {
 });
 
 Vue.use(VueAxios, axios)
-Vue.component("noticeinformation", noticeinformation)
 Vue.use(iview)
 
 export default {

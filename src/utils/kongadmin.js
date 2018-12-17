@@ -10,14 +10,16 @@ Vue.use(VueAxios, axios)
 
 export default {
 
-
     kongadminUri: KongAdminConfig.kongAdminBaseUrl,
 
 
+    getAllPlugins:function(success, fail, handlervueComponent){
+
+        this.httpget('/', success, fail, handlervueComponent)     
+    },
+
     getServices: function (success, fail, handlervueComponent) {
-
         this.httpget('/services/', success, fail, handlervueComponent)
-
     },
 
     getRoutes: function (success, fail, handlervueComponent) {
@@ -29,8 +31,12 @@ export default {
         this.httpget('/plugins/', success, fail, handlervueComponent)
     }
     ,
-    getComsumers: function (success, fail, handlervueComponent) {
+    getConsumers: function (success, fail, handlervueComponent) {
         this.httpget('/consumers/', success, fail, handlervueComponent)
+    }    
+    ,
+    getUpstreams: function (success, fail, handlervueComponent) {
+        this.httpget('/upstreams/', success, fail, handlervueComponent)
     }
     , httppost: function () {
         var responseBody = { status: null, data: '' }
@@ -38,10 +44,10 @@ export default {
         Vue.axios
             .post(this.kongadminUri + uri, requestBody, { headers: { 'content-type': 'application/x-www-form-urlencoded' } })
             .then(response => {
-                handleHttpResponse(responseBody,response,success,fail,handlervueComponent)
+                this.handleHttpResponse(responseBody,response,success,fail,handlervueComponent)
             })
             .catch(e => {
-                handleHttpException(responseBody,e,fail,handlervueComponent)
+                this.handleHttpException(responseBody,e,fail,handlervueComponent)
             })
     }
     , httpput: function () {
@@ -50,10 +56,10 @@ export default {
         Vue.axios
             .put(this.kongadminUri + uri, requestBody, { headers: { 'content-type': 'application/x-www-form-urlencoded' } })
             .then(response => {
-                handleHttpResponse(responseBody,response,success,fail,handlervueComponent)
+                this.handleHttpResponse(responseBody,response,success,fail,handlervueComponent)
             })
             .catch(e => {
-                handleHttpException(responseBody,e,fail,handlervueComponent)
+                this.handleHttpException(responseBody,e,fail,handlervueComponent)
             })
     },
     httpget: function (uri, success, fail, handlervueComponent) {
@@ -65,10 +71,10 @@ export default {
 
             .then(response => {
 
-                handleHttpResponse(responseBody,response,success,fail,handlervueComponent)
+                this.handleHttpResponse(responseBody,response,success,fail,handlervueComponent)
             })
             .catch(e => {
-                handleHttpException(responseBody,e,fail,handlervueComponent)
+                this.handleHttpException(responseBody,e,fail,handlervueComponent)
             })
 
     }
@@ -80,10 +86,10 @@ export default {
         Vue.axios
             .delete(this.kongadminUri + uri)
             .then(response => {
-                handleHttpResponse(responseBody,response,success,fail,handlervueComponent)
+                this.handleHttpResponse(responseBody,response,success,fail,handlervueComponent)
             })
             .catch(e => {
-                handleHttpException(responseBody,e,fail,handlervueComponent)
+                this.handleHttpException(responseBody,e,fail,handlervueComponent)
             })
 
     }
@@ -94,15 +100,16 @@ export default {
 
         if ((httpResponseBody.status === 200 ||  httpResponseBody.status ===201 )) {
             returnResponseToClient.data = httpResponseBody.data
-            successHandler(responseBody, component)
+            successHandler(returnResponseToClient, handlervueComponent)
         } else {
             if (httpResponseBody.data !== '') { returnResponseToClient.data = 'http request error' }
-            failHandler(responseBody, handlervueComponent)
+            failHandler(returnResponseToClient, handlervueComponent)
         }
     },
 
     handleHttpException(returnResponseToClient,exception,failHandler,handlervueComponent){
 
+        console.log(exception)
 
         if(returnResponseToClient.status == null){
             returnResponseToClient.status = 599 // exception internal error 

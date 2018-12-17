@@ -46,7 +46,12 @@ export default {
         label: '插件管理'
   
       }       
-
+      ,
+      {
+        name: 'consumermgmt',
+        label: '消费者管理'
+  
+      }   
 
   ]
 

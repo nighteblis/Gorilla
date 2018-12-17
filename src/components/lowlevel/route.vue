@@ -14,6 +14,9 @@
   </div>
 </template>
 <script>
+
+import kongadmin from '@/utils/kongadmin'
+
 export default {
   name: "routemgmt",
   description: "",
@@ -27,51 +30,39 @@ export default {
 
 
       routes: [
-                {
+        {
           title: "route ID",
           key: "id",
-
           width: 290
         },
-             {
+        {
           title: "协议",
-
           key: "protocols",
-
           width: 90
         },
         {
           title: "访问主机",
-
           key: "hosts",
           width:150
         },   
-                {
+        {
           title: "请求方法",
-
           key: "methods",
-
           width: 100
         },
 
 
         {
           title: "路径",
-
           key: "path",
-
           width: 100
         },
 
         {
           title: "关联服务",
-
           key: "service",
-
           width: 200
         },
-
-
 
         {
           title: "strip path",
@@ -97,13 +88,6 @@ export default {
           width: 100
         },
         {
-          title: "更新时间",
-
-          key: "updated_at",
-
-          width: 100
-        },
-        {
           title: "创建时间 ",
 
           key: "created_at",
@@ -111,6 +95,13 @@ export default {
           width: 100
         },
 
+        {
+          title: "更新时间",
+
+          key: "updated_at",
+
+          width: 100
+        },
         {
           title: "操作",
 
@@ -174,26 +165,24 @@ export default {
     };
   },
   created: function() {
-    console.log("dashboard created")
 
-    this.axios
-      .get(this.$store.state.kongAdmin + "/routes/")
+    console.log("route mgmt created")
 
-      .then(response => {
-        if ((response.status = "200")) {
-          console.log(response)
-          this.routesdata = response.data.data
-        } else {
-          this.$refs.noticeinformation.showalert(
+
+     var success = function (response,component){
+        console.log(component)
+        component.routesdata = response.data.data
+     }
+
+     var fail = function (response,component){
+        component.$refs.noticeinformation.showalert(
             "error",
-            "kong 有异常请尽快修复"
-          );
-        }
-      })
+             "kong 有异常请尽快修复"
+           )
+     }
+    kongadmin.getRoutes(success,fail,this)
 
-      .catch(e => {
-        console.log(e)
-      })
+
   },
 
   methods: {
