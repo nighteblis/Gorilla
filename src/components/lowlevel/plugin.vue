@@ -17,24 +17,20 @@
     <Modal v-model="addPluginWindow" title="添加插件" width="600" @on-ok="addPluginConfirm" @on-cancel="addPluginCancel">
 
 
-    <Form ref="formInline"  >
-
+    <Form v-model="pluginform"  >
         <FormItem prop="user" label="启用插件名称：">
-        <pluginselector   ref="pluginSelected"></pluginselector>
+          
+        <pluginselector  ref="pluginSelected" :placeholder="pluginform.plugin.placeholder"></pluginselector>
         </FormItem>
-
         <FormItem prop="user" label="针对服务和路由（二选一或者全部选择）：">
-          <serviceselector ref="serviceSelected"></serviceselector>
-          <routeselector ref="routeSelected"></routeselector>
+          <serviceselector ref="serviceSelected" :placeholder="pluginform.service.placeholder" ></serviceselector>
+          <routeselector ref="routeSelected" :placeholder="pluginform.route.placeholder" ></routeselector>
         </FormItem>
         <FormItem prop="user" label="针对消费者：">
-              <Select  v-model="consumerId" filterable>
-                <Option v-for="item in rcomsumerslist" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
+          <consumerselector ref="consumerSelected" :placeholder="pluginform.consumer.placeholder"></consumerselector>         
         </FormItem>
-
         <FormItem label="插件配置：">
-       <Input v-model="pluginConfig" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter configs">
+       <Input v-model="pluginform.pluginConfig.placeholder" type="textarea" :autosize="{minRows: 10,maxRows: 20}" placeholder="Enter configs">
        </Input>
         </FormItem>
 
@@ -57,19 +53,15 @@ export default {
   data() {
     return {
       modal1: false,
+      pluginform:{
+      consumer:{placeholder:'请选择要应用的消费者', value:''},
+      pluginConfig:{placeholder:'config.xxx=', value:''},
+      plugin: {placeholder:'请选择要添加的插件',value:''},
+      service: {placeholder:'请选择要应用的服务', value:''},
+      route: {placeholder:'请选择要应用的路由', value:''},
+      },
+
       addPluginWindow:false,
-      msg: 'plugin mgmt',
-      consumerId:'',
-      pluginConfig:'',
-      pluginname:'',
-      pluginNames:[{value:'pre-function',label:'pre-function'}],
-
-      serviceslist:[],
-
-      routeslist:[{value:'91963006-01e4-4946-b24f-e1ce9144b2de',label:'router1'}],
-
-      rcomsumerslist:[],
-
       servicesdata:[],
 
       services: [
@@ -240,6 +232,7 @@ export default {
   console.log(this.$refs.serviceSelected.serviceId)
   console.log(this.$refs.routeSelected.routeId)
   console.log(this.$refs.pluginSelected.pluginName)
+  console.log(this.$refs.consumerSelected.consumerId)
   console.log(this.pluginConfig)
 
   // var s1= this.serviceId === '' ?  '' : 'service_id='+this.serviceId
@@ -251,7 +244,7 @@ export default {
 
   console.log(uri)
 
-  this.axios.post(uri,this.checkAndGenerateWwwData(this.$refs.serviceSelected.serviceId,this.$refs.routeSelected.routeId,this.$refs.pluginSelected.pluginName,this.pluginConfig,consumerId),{headers: {'content-type': 'application/x-www-form-urlencoded'}})
+  this.axios.post(uri,this.checkAndGenerateWwwData(this.$refs.serviceSelected.serviceId,this.$refs.routeSelected.routeId,this.$refs.pluginSelected.pluginName,this.pluginConfig),{headers: {'content-type': 'application/x-www-form-urlencoded'}})
  .then(response => {
  console.log(response)
 
@@ -270,10 +263,10 @@ export default {
  .catch(e => {
 
  console.log(e)
-
+this.$Message.info("添加插件出错")
  })
 
-      this.$Message.info("Clicked ok")
+      //this.$Message.info("Clicked ok")
     },
     addPluginCancel() {
       this.$Message.info("Clicked cancel")
@@ -326,6 +319,7 @@ export default {
 
 
     },
+
         checkAndGenerateWwwData(){
 
          var returnstring = ''

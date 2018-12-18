@@ -1,5 +1,5 @@
 <template>
-  <Select v-model="consumerId" filterable>
+  <Select v-model="consumerId"  filterable :placeholder="placeholder">
     <Option v-for="item in consumers" :value="item.value" :key="item.value">{{ item.label }}</Option>
   </Select>
 </template>
@@ -12,10 +12,12 @@ export default {
   name: "consumerselector",
   data() {
     return {
-      serviceId:'',
-      services:[]
+      consumerId:'',
+      consumers:[]
     };
   },
+  props:['placeholder']
+,
   created:function(){
 
      var success = function (response,component){

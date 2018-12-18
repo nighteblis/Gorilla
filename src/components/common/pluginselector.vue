@@ -1,5 +1,5 @@
 <template>
-  <Select v-model="pluginName" filterable>
+  <Select v-model="pluginName" remote filterable :placeholder="placeholder">
     <Option v-for="item in pluginNames" :value="item.value" :key="item.value">{{ item.label }}</Option>
   </Select>
 </template>
@@ -15,7 +15,8 @@ export default {
       pluginName:'',
       pluginNames:[]
     };
-  },
+  },  props:['placeholder']
+,
   created:function(){
 
      var success = function (response,component){
