@@ -20,17 +20,17 @@
     <Form v-model="pluginform"  >
         <FormItem prop="user" label="启用插件名称：">
           
-        <pluginselector  ref="pluginSelected" :placeholder="pluginform.plugin.placeholder"></pluginselector>
+        <pluginselector   v-model="pluginform.plugin.value" :placeholder="pluginform.plugin.placeholder"></pluginselector>
         </FormItem>
         <FormItem prop="user" label="针对服务和路由（二选一或者全部选择）：">
-          <serviceselector ref="serviceSelected" :placeholder="pluginform.service.placeholder" ></serviceselector>
-          <routeselector ref="routeSelected" :placeholder="pluginform.route.placeholder" ></routeselector>
+          <serviceselector   v-model="pluginform.service.value"  :placeholder="pluginform.service.placeholder" ></serviceselector>
+          <routeselector   v-model="pluginform.router.value"  :placeholder="pluginform.router.placeholder" ></routeselector>
         </FormItem>
         <FormItem prop="user" label="针对消费者：">
-          <consumerselector ref="consumerSelected" :placeholder="pluginform.consumer.placeholder"></consumerselector>         
+          <consumerselector   v-model="pluginform.consumer.value"  :placeholder="pluginform.consumer.placeholder"></consumerselector>         
         </FormItem>
         <FormItem label="插件配置：">
-       <Input v-model="pluginform.pluginConfig.placeholder" type="textarea" :autosize="{minRows: 10,maxRows: 20}" placeholder="Enter configs">
+       <Input v-model="pluginform.pluginConfig.value" type="textarea" :autosize="{minRows: 10,maxRows: 20}" :placeholder="pluginform.pluginConfig.placeholder">
        </Input>
         </FormItem>
 
@@ -54,11 +54,11 @@ export default {
     return {
       modal1: false,
       pluginform:{
-      consumer:{placeholder:'请选择要应用的消费者', value:''},
+      consumer:{placeholder:'请选择要应用的消费者', value:'3'},
       pluginConfig:{placeholder:'config.xxx=', value:''},
       plugin: {placeholder:'请选择要添加的插件',value:''},
       service: {placeholder:'请选择要应用的服务', value:''},
-      route: {placeholder:'请选择要应用的路由', value:''},
+      router: {placeholder:'请选择要应用的路由', value:''},
       },
 
       addPluginWindow:false,
@@ -198,7 +198,7 @@ export default {
   created: function() {
 
     
-    console.log("route mgmt created")
+    console.log(' plugin mgmt created')
 
 
      var success = function (response,component){
@@ -225,15 +225,12 @@ export default {
 
   var uri = this.$store.state.kongAdmin +'/plugins/'
 
-
-  console.log(this.$refs)
+  console.log('consumer value: '+this.pluginform.consumer.value)
+  console.log(this.pluginform)
   console.log("====")
+  console.log(this.$refs)
+  
 
-  console.log(this.$refs.serviceSelected.serviceId)
-  console.log(this.$refs.routeSelected.routeId)
-  console.log(this.$refs.pluginSelected.pluginName)
-  console.log(this.$refs.consumerSelected.consumerId)
-  console.log(this.pluginConfig)
 
   // var s1= this.serviceId === '' ?  '' : 'service_id='+this.serviceId
   // var s2= this.routeId === '' ?  '' : 'route_id='+this.routeId
@@ -244,27 +241,27 @@ export default {
 
   console.log(uri)
 
-  this.axios.post(uri,this.checkAndGenerateWwwData(this.$refs.serviceSelected.serviceId,this.$refs.routeSelected.routeId,this.$refs.pluginSelected.pluginName,this.pluginConfig),{headers: {'content-type': 'application/x-www-form-urlencoded'}})
- .then(response => {
- console.log(response)
+//   this.axios.post(uri,this.checkAndGenerateWwwData(this.$refs.serviceSelected.serviceId,this.$refs.routeSelected.routeId,this.$refs.pluginSelected.pluginName,this.pluginConfig),{headers: {'content-type': 'application/x-www-form-urlencoded'}})
+//  .then(response => {
+//  console.log(response)
 
- if( response.data.status != 0 ) {
-     this.$Message.info("添加插件出错")
- }
- else
- {
-     if(!showoriginalalert)
-    this.$Message.info("添加成功")
+//  if( response.data.status != 0 ) {
+//      this.$Message.info("添加插件出错")
+//  }
+//  else
+//  {
+//      if(!showoriginalalert)
+//     this.$Message.info("添加成功")
 
- }
+//  }
 
 
- })
- .catch(e => {
+//  })
+//  .catch(e => {
 
- console.log(e)
-this.$Message.info("添加插件出错")
- })
+//  console.log(e)
+// this.$Message.info("添加插件出错")
+//  })
 
       //this.$Message.info("Clicked ok")
     },
@@ -284,36 +281,6 @@ this.$Message.info("添加插件出错")
 
       console.log('add plugin...')
       this.addPluginWindow = true
-
-
-    var success1 = function (response,component){
-     //   component.servicesdata = response.data.data
-        console.log(component.servicesdata)
-     }
-
-     var fail = function (response,component){
-        component.$refs.noticeinformation.showalert(
-            "error",
-             "获取插件列表异常"
-           )
-     }
-    kongadmin.getServices(success1,fail,this)
-     
-
-     var success2 = function (response,component){
-        console.log(component)
-       // component.routesdata = response.data.data
-     }
-
-
-    kongadmin.getRoutes(success2,fail,this)
-
-     var success3 = function (response,component){
-        console.log(component)
-       // component.routesdata = response.data.data
-     }
-
-    kongadmin.getConsumers(success3,fail,this)
 
 
 

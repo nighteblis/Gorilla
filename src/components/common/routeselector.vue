@@ -1,5 +1,5 @@
 <template>
-  <Select v-model="serviceId" filterable :placeholder="placeholder">
+  <Select v-model="serviceId" filterable :placeholder="placeholder" @input="select()">
     <Option v-for="item in services" :value="item.value" :key="item.value">{{ item.label }}</Option>
   </Select>
 </template>
@@ -13,7 +13,7 @@ export default {
   data() {
     return {
       serviceId:'',
-      services:[]
+      services:[{label:'test1',value:'test1'},{label:'test2',value:'test2'}]
     };
   },  props:['placeholder']
 ,
@@ -40,11 +40,13 @@ export default {
           component.$Message.info("get services error!")
      }
 
-    kongadmin.getRoutes(success,fail,this)
+   kongadmin.getRoutes(success,fail,this)
     
   },
   methods: {
-    
+        select(){
+              this.$emit('input', this.serviceId)
+    }
   }
 };
 </script>
