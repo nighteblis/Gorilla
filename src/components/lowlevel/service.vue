@@ -287,18 +287,22 @@ export default {
     };
   },
   created: function() {
-    var success = function(response, component) {
-      component.servicesdata = response.data.data;
-      console.log(component.servicesdata);
-    };
+    var recallhandler = function(response, component) {
 
-    var fail = function(response, component) {
+      if(response.code == 200 || response.code == 201){
+      component.servicesdata = response.data.data;
+      }
+      else{
       component.$refs.noticeinformation.showalert(
         "error",
         "kong 有异常请尽快修复"
-      );
-    };
-    kongadmin.getServices(success, fail, this);
+      )
+      }
+
+    }
+
+
+    kongadmin.getServices(recallhandler, recallhandler, this);
   },
 
   methods: {
@@ -309,6 +313,23 @@ export default {
       this.addServiceWindow = true;
     },
     addServiceConfirm(){
+
+          var recallhandler = function(response, component) {
+
+      if(response.code == 200 || response.code == 201){
+      component.servicesdata = response.data.data;
+      }
+      else{
+      component.$refs.noticeinformation.showalert(
+        "error",
+        "kong 有异常请尽快修复"
+      )
+      }
+
+    }
+
+    kongadmin.addServices(recallhandler, recallhandler, this);
+
 
     },
     addServiceCancel(){
