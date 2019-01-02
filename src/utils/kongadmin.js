@@ -17,6 +17,11 @@ export default {
 
         this.httpget('/', success, fail, handlervueComponent)     
     },
+    
+    addPlugin:function(success, fail, handlervueComponent){
+
+        this.httppost('/plugin', success, fail, handlervueComponent)     
+    },
 
     getServices: function (success, fail, handlervueComponent) {
         this.httpget('/services/', success, fail, handlervueComponent)
