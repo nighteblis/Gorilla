@@ -287,9 +287,9 @@ export default {
     };
   },
   created: function() {
-    var recallhandler = function(response, component) {
 
-      if(response.code == 200 || response.code == 201){
+    var recallhandler = function(response, component) {
+      if(response.status == 200 || response.status == 201){
       component.servicesdata = response.data.data;
       }
       else{
@@ -301,8 +301,9 @@ export default {
 
     }
 
-
     kongadmin.getServices(recallhandler, recallhandler, this);
+
+
   },
 
   methods: {
@@ -315,9 +316,8 @@ export default {
     addServiceConfirm(){
 
           var recallhandler = function(response, component) {
-
       if(response.code == 200 || response.code == 201){
-      component.servicesdata = response.data.data;
+            this.created()
       }
       else{
       component.$refs.noticeinformation.showalert(
@@ -328,7 +328,8 @@ export default {
 
     }
 
-    kongadmin.addServices(recallhandler, recallhandler, this);
+
+    kongadmin.addService(this.serviceform,recallhandler, recallhandler, this);
 
 
     },

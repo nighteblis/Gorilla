@@ -18,10 +18,17 @@ export default {
         this.httpget('/', success, fail, handlervueComponent)     
     },
 
+    addPlugin:function(postbody,success, fail, handlervueComponent){
+
+        this.httppost('/plugins/', postbody,success, fail, handlervueComponent)     
+    },
+
     getServices: function (success, fail, handlervueComponent) {
         this.httpget('/services/', success, fail, handlervueComponent)
     },
-
+    addService: function (postbody,success, fail, handlervueComponent) {
+        this.httppost('/services/',postbody, success, fail, handlervueComponent)
+    },
     getRoutes: function (success, fail, handlervueComponent) {
         this.httpget('/routes/', success, fail, handlervueComponent)
     }
@@ -38,7 +45,7 @@ export default {
     getUpstreams: function (success, fail, handlervueComponent) {
         this.httpget('/upstreams/', success, fail, handlervueComponent)
     }
-    , httppost: function () {
+    , httppost: function (uri, requestBody,success, fail, handlervueComponent) {
         var responseBody = { status: null, data: '' }
         var header = null
 
@@ -59,7 +66,7 @@ export default {
                 this.handleHttpException(responseBody,e,fail,handlervueComponent)
             })
     }
-    , httpput: function () {
+    , httpput: function (uri, requestBody,success, fail, handlervueComponent) {
         var responseBody = { status: null, data: '' }
 
         if ( typeof requestBody === 'string'){

@@ -15,8 +15,8 @@
     </Modal>
 
     <Modal
-      v-model="addPluginWindow"
-      title="添加插件"
+      v-model="pluginformWindow"
+      :title="pluginformTitle"
       width="600"
       @on-ok="addPluginConfirm"
       @on-cancel="addPluginCancel"
@@ -66,6 +66,7 @@ export default {
   data() {
     return {
       modal1: false,
+      pluginformTitle:'添加插件',
       pluginform: {
         consumer: {
           placeholder: "请选择要应用的消费者",
@@ -86,7 +87,7 @@ export default {
         }
       },
 
-      addPluginWindow: false,
+      pluginformWindow: false,
       servicesdata: [],
 
       services: [
@@ -185,7 +186,10 @@ export default {
 
                   on: {
                     click: () => {
-                      this.modal1 = true; //this.ok(params)
+                      this.pluginformWindow = true  //this.ok(params)
+                      this.pluginformTitle = '更新插件'
+                      console.log(params)
+
                     }
                   }
                 },
@@ -289,7 +293,7 @@ export default {
     },
     addPlugin() {
       console.log("add plugin...")
-      this.addPluginWindow = true
+      this.pluginformWindow = true
     },
 
     checkAndGenerateWwwData(formdata) {
@@ -313,8 +317,8 @@ export default {
           else returnstring += "&" + valueObject.key +"="+ valueObject.value
         }
 
-        i++
-        
+        i++        
+
       })
 
       console.log((returnstring = returnstring.replace(/^&+|&+$/g, "")));
