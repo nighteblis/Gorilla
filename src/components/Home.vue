@@ -21,7 +21,7 @@
         </Menu>
       </Header>
 
-      <Menu class="leftmenu" active-name="1-2" :open-names="['1']" @on-select="select($event)">
+      <Menu class="leftmenu" active-name="1-2"  @on-select="select($event)">
         <Submenu name="1">
           <template slot="title">
             <Icon type="ios-people"/>应用
@@ -244,6 +244,7 @@ a {
 .welcome {
   font-size: 2rem;
   font-weight: bold;
+  height:500px;
 }
 
 .fade-enter-active,

@@ -14,8 +14,7 @@
   </div>
 </template>
 <script>
-
-import kongadmin from '@/utils/kongadmin'
+import kongadmin from "@/utils/kongadmin";
 
 export default {
   name: "routemgmt",
@@ -25,10 +24,7 @@ export default {
     return {
       modal1: false,
       msg: "route mgmt",
-
       routesdata: [],
-
-
       routes: [
         {
           title: "route ID",
@@ -43,14 +39,13 @@ export default {
         {
           title: "访问主机",
           key: "hosts",
-          width:150
-        },   
+          width: 150
+        },
         {
           title: "请求方法",
           key: "methods",
           width: 100
         },
-
 
         {
           title: "路径",
@@ -130,7 +125,7 @@ export default {
 
                   on: {
                     click: () => {
-                      this.modal1 = true //this.ok(params)
+                      this.modal1 = true; //this.ok(params)
                     }
                   }
                 },
@@ -152,7 +147,7 @@ export default {
 
                   on: {
                     click: () => {
-                      this.cancel()
+                      this.cancel();
                     }
                   }
                 },
@@ -165,38 +160,34 @@ export default {
     };
   },
   created: function() {
+    console.log("route mgmt created");
 
-    console.log("route mgmt created")
+    var success = function(response, component) {
+      console.log(component);
+      component.routesdata = response.data.data;
+    };
 
-
-     var success = function (response,component){
-        console.log(component)
-        component.routesdata = response.data.data
-     }
-
-     var fail = function (response,component){
-        component.$refs.noticeinformation.showalert(
-            "error",
-             "kong 有异常请尽快修复"
-           )
-     }
-    kongadmin.getRoutes(success,fail,this)
-
-
+    var fail = function(response, component) {
+      component.$refs.noticeinformation.showalert(
+        "error",
+        "kong 有异常请尽快修复"
+      );
+    };
+    kongadmin.getRoutes(success, fail, this);
   },
 
   methods: {
     ok() {
-      this.$Message.info("Clicked ok")
+      this.$Message.info("Clicked ok");
     },
     cancel() {
-      this.$Message.info("Clicked cancel")
+      this.$Message.info("Clicked cancel");
     },
-    changeDatetoString (date) {
-      return new Date(date)
+    changeDatetoString(date) {
+      return new Date(date);
     }
   }
-}
+};
 </script>
 <style scoped>
 code {

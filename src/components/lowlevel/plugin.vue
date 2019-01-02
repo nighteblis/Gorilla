@@ -22,13 +22,13 @@
       @on-cancel="addPluginCancel"
     >
       <Form v-model="pluginform">
-        <FormItem prop="user" label="启用插件名称：">
+        <FormItem  label="启用插件名称：">
           <pluginselector
             v-model="pluginform.plugin.value"
             :placeholder="pluginform.plugin.placeholder"
           ></pluginselector>
         </FormItem>
-        <FormItem prop="user" label="针对服务和路由（二选一或者全部选择）：">
+        <FormItem  label="针对服务和路由（二选一或者全部选择）：">
           <serviceselector
             v-model="pluginform.service.value"
             :placeholder="pluginform.service.placeholder"
@@ -38,7 +38,7 @@
             :placeholder="pluginform.router.placeholder"
           ></routeselector>
         </FormItem>
-        <FormItem prop="user" label="针对消费者：">
+        <FormItem  label="针对消费者：">
           <consumerselector
             v-model="pluginform.consumer.value"
             :placeholder="pluginform.consumer.placeholder"

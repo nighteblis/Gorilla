@@ -3,19 +3,56 @@
     <br>
     <noticeinformation ref="noticeinformation"></noticeinformation>
     <br>
+    <Button type="primary" @click="addService">添加服务</Button>
 
     <Table border :columns="services" :data="servicesdata"></Table>
 
-    <Modal v-model="modal1" title="测试" @on-ok="ok" @on-cancel="cancel">
-      <p>Content of dialog</p>
-      <p>Content of dialog</p>
-      <p>Content of dialog</p>
+    <Modal
+      v-model="addServiceWindow"
+      title="添加服务"
+      width="700"
+      @on-ok="addServiceConfirm"
+      @on-cancel="addServiceCancel" 
+    >
+      <Form :model="serviceform" :rules="serviceValidate" :label-width="150" >
+        <FormItem prop="name" label="服务名称">
+          <Input v-model="serviceform.name" placeholder="服务名称"></Input>
+        </FormItem>
+        <FormItem prop="retries"  label="重试次数">
+          <Input v-model="serviceform.retries" placeholder="5"></Input>
+        </FormItem>
+        <FormItem prop="protocol"  label="协议">
+          <Select v-model="serviceform.protocol" multiple >
+            <Option v-for="item in protocols" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem prop="host"  label="上游服务">
+          <Input v-model="serviceform.host" placeholder="上游服务"></Input>
+        </FormItem>
+        <FormItem prop="port"  label="上游服务端口">
+          <Input v-model="serviceform.port" placeholder="上游服务端口,例如80"></Input>
+        </FormItem>
+        <FormItem prop="path"  label="上游服务路径">
+          <Input v-model="serviceform.path" placeholder="上游服务路径(可选)"></Input>
+        </FormItem>
+
+        <FormItem prop="connect_timeout"  label="链接超时时间">
+          <Input v-model="serviceform.connect_timeout" placeholder="60000单位毫秒"></Input>
+        </FormItem>
+
+        <FormItem prop="write_timeout"  label="请求上游服务超时时间">
+          <Input v-model="serviceform.write_timeout" placeholder="60000单位毫秒"></Input>
+        </FormItem>
+        <FormItem prop="read_timeout"  label="读取上游服务超时时间">
+          <Input v-model="serviceform.read_timeout" placeholder="60000单位毫秒"></Input>
+        </FormItem>
+      </Form>
     </Modal>
+    
   </div>
 </template>
 <script>
-
-import kongadmin from '@/utils/kongadmin'
+import kongadmin from "@/utils/kongadmin";
 
 export default {
   name: "servicemgmt",
@@ -23,8 +60,78 @@ export default {
 
   data() {
     return {
-      modal1: false,
-      msg: "service mgmt",
+      serviceform: {
+        name: "",
+        retries:'5',
+        protocol:'',
+        host:'',
+        port:'',
+        path:'',
+        connect_timeout:'60000',
+        write_timeout:'60000',
+        read_timeout:'60000'
+
+
+      },
+      serviceValidate: {
+        retries: [
+          {
+            required: true,
+            message: "cannot be empty",
+            trigger: "blur"
+          }
+        ],
+        protocol: [
+          {
+            required: true,
+            message: "cannot be empty",
+            trigger: "blur"
+          }
+        ],
+        host: [
+          {
+            required: true,
+            message: "cannot be empty",
+            trigger: "blur"
+          }
+        ],        
+        
+        port: [
+          {
+            required: true,
+            message: "cannot be empty",
+            trigger: "blur"
+          }
+        ],      
+        
+        connect_timeout: [
+          {
+            required: true,
+            message: "cannot be empty",
+            trigger: "blur"
+          }
+        ],            
+        write_timeout: [
+          {
+            required: true,
+            message: "cannot be empty",
+            trigger: "blur"
+          }
+        ],    
+        read_timeout: [
+          {
+            required: true,
+            message: "cannot be empty",
+            trigger: "blur"
+          }
+        ]                
+      },
+      protocols: [
+        { value: "http", label: "http" },
+        { value: "https", label: "https" }
+      ],
+
+      addServiceWindow: false,
 
       servicesdata: [],
 
@@ -145,7 +252,7 @@ export default {
 
                   on: {
                     click: () => {
-                      this.modal1 = true //this.ok(params)
+                      this.addServiceWindow = true; //this.ok(params)
                     }
                   }
                 },
@@ -167,7 +274,7 @@ export default {
 
                   on: {
                     click: () => {
-                      this.cancel()
+                      //this.cancel();
                     }
                   }
                 },
@@ -180,36 +287,56 @@ export default {
     };
   },
   created: function() {
+    var recallhandler = function(response, component) {
 
-     var success = function (response,component){
-        component.servicesdata = response.data.data
-        console.log(component.servicesdata)
-     }
+      if(response.code == 200 || response.code == 201){
+      component.servicesdata = response.data.data;
+      }
+      else{
+      component.$refs.noticeinformation.showalert(
+        "error",
+        "kong 有异常请尽快修复"
+      )
+      }
 
-     var fail = function (response,component){
-        component.$refs.noticeinformation.showalert(
-            "error",
-             "kong 有异常请尽快修复"
-           )
-     }
-    kongadmin.getServices(success,fail,this)
+    }
 
+
+    kongadmin.getServices(recallhandler, recallhandler, this);
   },
 
   methods: {
+    changeDatetoString(date) {
+      return new Date(date);
+    },
+    addService() {
+      this.addServiceWindow = true;
+    },
+    addServiceConfirm(){
+
+          var recallhandler = function(response, component) {
+
+      if(response.code == 200 || response.code == 201){
+      component.servicesdata = response.data.data;
+      }
+      else{
+      component.$refs.noticeinformation.showalert(
+        "error",
+        "kong 有异常请尽快修复"
+      )
+      }
+
+    }
+
+    kongadmin.addServices(recallhandler, recallhandler, this);
 
 
-    ok() {
-      this.$Message.info("Clicked ok")
     },
-    cancel() {
-      this.$Message.info("Clicked cancel")
-    },
-    changeDatetoString (date) {
-      return new Date(date)
+    addServiceCancel(){
+
     }
   }
-}
+};
 </script>
 <style scoped>
 code {
