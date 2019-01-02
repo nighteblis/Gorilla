@@ -40,9 +40,18 @@ export default {
     }
     , httppost: function () {
         var responseBody = { status: null, data: '' }
+        var header = null
+
+        if ( typeof requestBody === 'string'){
+
+            header = { headers: { 'content-type': 'application/x-www-form-urlencoded' } }
+        }
+        else {
+            header = { headers: { 'content-type': 'application/json' } }
+        }
 
         Vue.axios
-            .post(this.kongadminUri + uri, requestBody, { headers: { 'content-type': 'application/x-www-form-urlencoded' } })
+            .post(this.kongadminUri + uri, requestBody, header)
             .then(response => {
                 this.handleHttpResponse(responseBody,response,success,fail,handlervueComponent)
             })
@@ -53,8 +62,16 @@ export default {
     , httpput: function () {
         var responseBody = { status: null, data: '' }
 
+        if ( typeof requestBody === 'string'){
+
+            header = { headers: { 'content-type': 'application/x-www-form-urlencoded' } }
+        }
+        else {
+            header = { headers: { 'content-type': 'application/json' } }
+        }
+
         Vue.axios
-            .put(this.kongadminUri + uri, requestBody, { headers: { 'content-type': 'application/x-www-form-urlencoded' } })
+            .put(this.kongadminUri + uri, requestBody, header)
             .then(response => {
                 this.handleHttpResponse(responseBody,response,success,fail,handlervueComponent)
             })

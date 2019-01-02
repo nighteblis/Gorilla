@@ -22,7 +22,7 @@
           <Input v-model="serviceform.retries" placeholder="5"></Input>
         </FormItem>
         <FormItem prop="protocol"  label="协议">
-          <Select v-model="serviceform.protocol" multiple >
+          <Select v-model="serviceform.protocol" >
             <Option v-for="item in protocols" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
