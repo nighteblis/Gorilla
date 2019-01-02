@@ -227,7 +227,8 @@ a {
 .headermenu .layout-logo {
   width: 100px;
   height: 30px;
-  background: #5b6270;
+  /*background: #5b6270;*/
+  background: no-repeat center/40% url('../assets/logo.svg');
   border-radius: 3px;
   float: left;
   position: relative;

@@ -13,31 +13,59 @@ export default {
     kongadminUri: KongAdminConfig.kongAdminBaseUrl,
 
 
-    getAllPlugins:function(success, fail, handlervueComponent){
+    status:function(success, fail, handlervueComponent){
 
         this.httpget('/', success, fail, handlervueComponent)     
     },
 
-    addPlugin:function(postbody,success, fail, handlervueComponent){
-
-        this.httppost('/plugins/', postbody,success, fail, handlervueComponent)     
-    },
-
-    getServices: function (success, fail, handlervueComponent) {
-        this.httpget('/services/', success, fail, handlervueComponent)
-    },
-    addService: function (postbody,success, fail, handlervueComponent) {
-        this.httppost('/services/',postbody, success, fail, handlervueComponent)
-    },
-    getRoutes: function (success, fail, handlervueComponent) {
-        this.httpget('/routes/', success, fail, handlervueComponent)
-    }
-    ,
-    getWorkingPlugins: function (success, fail, handlervueComponent) {
+    getPlugins: function (success, fail, handlervueComponent) {
 
         this.httpget('/plugins/', success, fail, handlervueComponent)
     }
     ,
+    addPlugin:function(postbody,success, fail, handlervueComponent){
+
+        this.httppost('/plugins/', postbody,success, fail, handlervueComponent)     
+    },
+    updatePlugin:function(postbody,success, fail, handlervueComponent){
+
+        this.httpput('/plugins/', postbody,success, fail, handlervueComponent)     
+    },
+    deletePlugin:function(success, fail, handlervueComponent){
+
+        this.httpdelete('/plugins/', success, fail, handlervueComponent)     
+    },
+    
+    getServices: function (success, fail, handlervueComponent) {
+        this.httpget('/services/', success, fail, handlervueComponent)
+    },
+        
+    deleteService: function (success, fail, handlervueComponent) {
+        this.httpdelete('/services/', success, fail, handlervueComponent)
+    },
+    updateService: function (postbody,success, fail, handlervueComponent) {
+        this.httpput('/services/', postbody,success, fail, handlervueComponent)
+    },    
+    addService: function (postbody,success, fail, handlervueComponent) {
+        this.httppost('/services/',postbody, success, fail, handlervueComponent)
+    },
+
+    getRoutes: function (success, fail, handlervueComponent) {
+        this.httpget('/routes/', success, fail, handlervueComponent)
+    }
+    ,
+    deleteRoute: function (success, fail, handlervueComponent) {
+        this.httpget('/routes/', success, fail, handlervueComponent)
+    }
+    ,
+    addRoute: function (postbody,success, fail, handlervueComponent) {
+        this.httppost('/routes/',postbody, success, fail, handlervueComponent)
+    },
+
+    updateRoute: function (postbody,success, fail, handlervueComponent) {
+        this.httpput('/routes/',postbody, success, fail, handlervueComponent)
+    },
+
     getConsumers: function (success, fail, handlervueComponent) {
         this.httpget('/consumers/', success, fail, handlervueComponent)
     }    

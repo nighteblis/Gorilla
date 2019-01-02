@@ -239,7 +239,7 @@ export default {
         "kong 有异常请尽快修复"
       );
     };
-    kongadmin.getWorkingPlugins(success, fail, this);
+    kongadmin.getPlugins(success, fail, this);
   },
 
   methods: {
