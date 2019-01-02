@@ -20,14 +20,14 @@ export default {
 
     addPlugin:function(postbody,success, fail, handlervueComponent){
 
-        this.httppost('/plugin', postbody,success, fail, handlervueComponent)     
+        this.httppost('/plugins/', postbody,success, fail, handlervueComponent)     
     },
 
     getServices: function (success, fail, handlervueComponent) {
         this.httpget('/services/', success, fail, handlervueComponent)
     },
     addService: function (postbody,success, fail, handlervueComponent) {
-        this.httppost('/service/',postbody, success, fail, handlervueComponent)
+        this.httppost('/services/',postbody, success, fail, handlervueComponent)
     },
     getRoutes: function (success, fail, handlervueComponent) {
         this.httpget('/routes/', success, fail, handlervueComponent)
