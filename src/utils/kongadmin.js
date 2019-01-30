@@ -73,6 +73,7 @@ export default {
     getUpstreams: function (success, fail, handlervueComponent) {
         this.httpget('/upstreams/', success, fail, handlervueComponent)
     }
+    
     , httppost: function (uri, requestBody,success, fail, handlervueComponent) {
         var responseBody = { status: null, data: '' }
         var header = null

@@ -14,6 +14,10 @@
   </div>
 </template>
 <script>
+
+
+import kongadmin from '@/utils/kongadmin'
+
 export default {
   name: "dashboard",
 
@@ -37,16 +41,13 @@ export default {
   },
 
   created: function() {
-    console.log("dashboard created");
 
-    this.axios
-      .get("http://172.16.2.39:50001/")
 
-      .then(response => {
-        if ((response.status = "200")) {
+    var success = function(response, component) {
+      console.log(component);
           console.log(response);
-          this.data = response.data;
-          console.log(this.data);
+          component.data = response.data;
+          console.log(component.data);
           var newdata = [];
           Object.keys(response.data.plugins.available_on_server).forEach(
             function(key) {
@@ -57,9 +58,9 @@ export default {
             }
           );
 
-          this.availablepluginsdata = newdata;
+          component.availablepluginsdata = newdata;
 
-          console.log(this.availablepluginsdata)
+          console.log(component.availablepluginsdata)
 
           newdata = [];
 
@@ -75,22 +76,21 @@ export default {
                 value: response.data.configuration[key]
               });
           });
-          this.serverstatusdata = newdata;
-
-          console.log(this.serverstatusdata)
-
+          component.serverstatusdata = newdata;
+          console.log(component.serverstatusdata)
           newdata = [];
-        } else {
-          this.$refs.noticeinformation.showalert(
-            "error",
-            "kong 有异常请尽快修复"
-          );
-        }
-      })
+    };
 
-      .catch(e => {
-        console.log(e);
-      });
+    var fail = function(response, component) {
+ 
+      console.log(response);
+      component.$refs.noticeinformation.showalert(
+        "error",
+        "kong 有异常请尽快修复"
+      );
+    };
+    kongadmin.status(success, fail, this);
+
   },
   methods: {
     querybillloans() {

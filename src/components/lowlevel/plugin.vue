@@ -52,6 +52,12 @@
             :placeholder="pluginform.pluginConfig.placeholder"
           ></Input>
         </FormItem>
+        <!--
+          <FormItem>
+            <Button type="primary" @click="handleSubmit('formValidate')">Submit</Button>
+            <Button @click="handleReset('formValidate')" style="margin-left: 8px">Reset</Button>
+        </FormItem>
+        -->
       </Form>
     </Modal>
   </div>

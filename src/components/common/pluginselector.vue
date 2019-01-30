@@ -40,7 +40,7 @@ export default {
           component.$Message.info("get plugins name error!")
      }
 
-    kongadmin.getAllPlugins(success,fail,this)
+    kongadmin.status(success,fail,this)
     
   },
   methods: {

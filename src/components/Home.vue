@@ -1,6 +1,8 @@
 <template>
   <div id="app">
     <div class="Core System Test Asistor">
+
+      <!-- Header menu -->
       <Header>
         <Menu mode="horizontal" class="headermenu" theme="dark" active-name="1">
           <div class="layout-logo"></div>
@@ -20,20 +22,22 @@
           </div>
         </Menu>
       </Header>
-
+    <!-- Header menu end -->
+     <!-- Left menu panel -->
       <Menu class="leftmenu" active-name="1-2"  @on-select="select($event)">
+
         <Submenu name="1">
           <template slot="title">
             <Icon type="ios-people"/>应用
           </template>
-          <MenuGroup title="vhosts管理">
+       <!--   <MenuGroup title="vhosts管理"> -->
             <MenuItem
               v-for="highapis in menutiems.highlevel"
               :key="highapis.name"
               :ref="'menuitem'+highapis.name"
               :name="highapis.name"
             >{{highapis.label}}</MenuItem>
-          </MenuGroup>
+          <!-- </MenuGroup>-->
         </Submenu>
 
         <Submenu name="2">
@@ -47,9 +51,11 @@
             :name="lowapis.name"
           >{{lowapis.label}}</MenuItem>
         </Submenu>
-      </Menu>
 
-      <Tabs type="card" closable @on-tab-remove="handleTabRemove">
+      </Menu>
+     <!-- Left menu panel end-->
+     <!-- tabs content panel -->
+      <Tabs type="card" :value="activeTab" closable @on-tab-remove="handleTabRemove">
         <TabPane
           ref="tabPanes"
           :key="tab.component"
@@ -58,24 +64,27 @@
           v-if="tab.display"
           v-for="tab in tabs"
         >
-          <component ref="tabComponents" :is="tab.component"></component>
+          <component  :is="tab.component"></component>
         </TabPane>
       </Tabs>
+     <!-- tabs content panel -->
 
+     <!-- default welcome content , will disappear if content shows-->
       <div class="welcome" v-if="welcomedisplay">core</div>
 
+     <!-- footer -->
       <div id="footer">
         <Divider/>nighteblis@hotmail.com
       </div>
-    </div>
-  </div>
+
+    </div>  <!-- Core System Test Asistor  class end--> 
+  </div>  <!-- app end -->
 </template>
 
 <script>
 import Vue from "vue"
 import "iview/dist/styles/iview.css"
 import iview from "iview"
-// import noticeinformation from "@/components/common/noticeinformation.vue"
 
 import menuitems from "@/config/menuitems"
 import axios from "axios"
@@ -126,7 +135,8 @@ export default {
       alert: this.$store.state.alert,
       msg: "Welcome to Your Vue.js App",
       tabs: [],
-      menutiems: menuitems
+      menutiems: menuitems,
+      activeTab:''
     }
   },
   methods: {
@@ -142,6 +152,7 @@ export default {
       })
     },
     select(event) {
+
       console.log(event)
 
       this.welcomedisplay = false
@@ -154,11 +165,12 @@ export default {
       var labelname = this.$refs["menuitem" + event][0].$el.innerText
 
       console.log(labelname)
-      if (this.tabs.length == 0) {
-        this.tabs.push({ display: true, component: event, label: labelname })
-        console.log("returned when length == 0 ")
-        return
-      }
+
+      // if (this.tabs.length == 0) {
+      //   this.tabs.push({ display: true, component: event, label: labelname })
+      //   console.log("returned when length == 0 ")
+      //   return
+      // }
 
       var thiz = this
       this.tabs.forEach(function(element) {
@@ -169,24 +181,30 @@ export default {
           element.display = true
           return // no need more loop
         }
-      })
 
+      })
+      console.log(this.tabs)
       console.log('-------')
 
       if (!componentexist) {
         this.tabs.push({ display: true, component: event, label: labelname })
       }
-      if (this.$refs.tabPanes.length > 0) {
-        console.log('length greater than  0')
-        this.$refs.tabPanes[0].$parent.activeKey = event
-      } else {
-        console.log('length equal 0')
-      }
+
+      this.activeTab = event
+
+      // if (this.$refs.tabPanes.length > 0) {
+      //   console.log('length greater than  0')
+      //   this.$refs.tabPanes[0].$parent.activeKey = event
+      // } else {
+      //   console.log('length equal 0')
+      // }
+
     },
 
     open() {
       console.log(this)
     },
+    
     selectenv(selectvalue) {
       // console.log(this.$store.state.selectedEnv)
       // console.log(this.selectedEnv)

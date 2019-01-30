@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
-
+//this router is not used by this app
 Vue.use(Router)
 
 export default new Router({
