@@ -1,8 +1,10 @@
 <template>
   <div>
+    <br v-if="success.display || warning.display || error.display" />
     <Alert type="success" v-if="alert.success.display" show-icon>{{alert.success.message}}</Alert>
     <Alert type="warning" v-if="alert.warning.display" show-icon>{{alert.warning.message}}</Alert>
     <Alert type="error" v-if="alert.error.display" show-icon>{{alert.error.message}}</Alert>
+   <br v-if="success.display || warning.display || error.display" />
   </div>
 </template>
 <script>

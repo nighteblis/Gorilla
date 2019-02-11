@@ -1,20 +1,19 @@
 <template>
   <div>
-    <br>
     <noticeinformation ref="noticeinformation"></noticeinformation>
-    <br>
-    <Button type="primary" @click="addService">添加服务</Button>
-
+    <Button type="primary" @click="openAddServiceForm">添加服务</Button>
+    <br><br>
     <Table border :columns="services" :data="servicesdata"></Table>
 
     <Modal
       v-model="addServiceWindow"
       title="添加服务"
       width="700"
-      @on-ok="addServiceConfirm"
+      :loading="loading"
+      @on-ok="addServiceConfirm('serviceform')"
       @on-cancel="addServiceCancel" 
     >
-      <Form :model="serviceform" :rules="serviceValidate" :label-width="150" >
+      <Form ref="serviceform" :model="serviceform" :rules="serviceValidate" :label-width="150" >
         <FormItem prop="name" label="服务名称">
           <Input v-model="serviceform.name" placeholder="服务名称"></Input>
         </FormItem>
@@ -70,8 +69,6 @@ export default {
         connect_timeout:'60000',
         write_timeout:'60000',
         read_timeout:'60000'
-
-
       },
       serviceValidate: {
         retries: [
@@ -132,6 +129,7 @@ export default {
       ],
 
       addServiceWindow: false,
+      loading:true,
 
       servicesdata: [],
 
@@ -252,7 +250,9 @@ export default {
 
                   on: {
                     click: () => {
-                      this.addServiceWindow = true; //this.ok(params)
+
+                      this.updateService()
+                      //this.addServiceWindow = true; //this.ok(params)
                     }
                   }
                 },
@@ -274,6 +274,7 @@ export default {
 
                   on: {
                     click: () => {
+                      this.deleteService()
                       //this.cancel();
                     }
                   }
@@ -295,7 +296,7 @@ export default {
       else{
       component.$refs.noticeinformation.showalert(
         "error",
-        "kong 有异常请尽快修复"
+        response.data
       )
       }
 
@@ -303,19 +304,32 @@ export default {
 
     kongadmin.getServices(recallhandler, recallhandler, this);
 
-
   },
 
   methods: {
+    
     changeDatetoString(date) {
       return new Date(date);
     },
-    addService() {
+
+    openAddServiceForm() {
       this.addServiceWindow = true;
     },
-    addServiceConfirm(){
+    addServiceConfirm(name){
 
-          var recallhandler = function(response, component) {
+      // check form before confirm post.
+              this.$refs[name].validate((valid) => {
+                    if (valid) {
+                        this.$Message.success('Success!')
+                      kongadmin.addService(this.serviceform,recallhandler, recallhandler, this);
+                    } else {
+                        this.$Message.error('Fail!')
+                        console.log("what 's up?")   
+                        this.changeLoading()                     
+                    }
+                })
+
+      var recallhandler = function(response, component) {
       if(response.code == 200 || response.code == 201){
             this.created()
       }
@@ -326,16 +340,28 @@ export default {
       )
       }
 
-    }
-
-
-    kongadmin.addService(this.serviceform,recallhandler, recallhandler, this);
-
+    }           
 
     },
+
+    changeLoading() {
+            this.loading = false;
+            this.$nextTick(() => {
+              this.loading = true;
+            });
+          },
+
     addServiceCancel(){
 
+
     }
+  ,
+  updateService(params){
+
+  },
+  deleteService(params){
+
+  }
   }
 };
 </script>
