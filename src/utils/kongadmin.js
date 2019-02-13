@@ -40,8 +40,8 @@ export default {
         this.httpget('/services/', success, fail, handlervueComponent)
     },
         
-    deleteService: function (success, fail, handlervueComponent) {
-        this.httpdelete('/services/', success, fail, handlervueComponent)
+    deleteService: function (serviceId,success, fail, handlervueComponent) {
+        this.httpdelete('/services/'+serviceId, success, fail, handlervueComponent)
     },
     updateService: function (postbody,success, fail, handlervueComponent) {
         this.httpput('/services/', postbody,success, fail, handlervueComponent)
@@ -96,7 +96,8 @@ export default {
             })
     }
     , httpput: function (uri, requestBody,success, fail, handlervueComponent) {
-        var responseBody = { status: null, data: '' }
+        
+        var responseBody = { status: null, data: '' }  
 
         if ( typeof requestBody === 'string'){
 
@@ -132,7 +133,7 @@ export default {
 
     }
     ,
-    httpdelete: function (uri, requestBody,success, fail, handlervueComponent) {
+    httpdelete: function (uri,success, fail, handlervueComponent) {
 
         var responseBody = { status: null, data: '' }
 
@@ -153,10 +154,10 @@ export default {
 
         if ((httpResponseBody.status === 200 ||  httpResponseBody.status ===201 )) {
             returnResponseToClient.data = httpResponseBody.data
-            successHandler(returnResponseToClient, handlervueComponent)
+            successHandler(httpResponseBody, handlervueComponent)
         } else {
             if (httpResponseBody.data !== '') { returnResponseToClient.data = 'http request error' }
-            failHandler(returnResponseToClient, handlervueComponent)
+            failHandler(httpResponseBody, handlervueComponent)
         }
     },
 
@@ -172,7 +173,15 @@ export default {
 
 
 
-    }
+    },
+
+    changeDatetoString(date) {
+        
+         date = date +''+'000'
+        //console.log(date+''+'000')
+        console.log(date)
+        return new Date(parseInt(date)).toLocaleString();
+      },
 
 
 }

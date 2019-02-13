@@ -26,11 +26,11 @@ export default {
       msg: "route mgmt",
       routesdata: [],
       routes: [
-        {
-          title: "route ID",
-          key: "id",
-          width: 290
-        },
+        // {
+        //   title: "route ID",
+        //   key: "id",
+        //   width: 290
+        // },
         {
           title: "协议",
           key: "protocols",

@@ -1,10 +1,9 @@
 <template>
   <div>
-    <br>
-    <noticeinformation ref="noticeinformation"></noticeinformation>
-    <br>
 
+    <noticeinformation ref="noticeinformation"></noticeinformation>
     <Button type="primary" @click="addPlugin">添加插件</Button>
+    <br/><br/>
 
     <Table border :columns="services" :data="servicesdata"></Table>
 
@@ -154,7 +153,11 @@ export default {
 
           key: "updated_at",
 
-          width: 100
+          width: 100,
+          render:(h,params) =>{
+              return h("span",{},params.rows.updated_at )
+
+          }
         },
         {
           title: "创建时间 ",
@@ -192,7 +195,7 @@ export default {
 
                   on: {
                     click: () => {
-                      this.pluginformWindow = true  //this.ok(params)
+                      this.pluginformWindow = true  
                       this.pluginformTitle = '更新插件'
                       console.log(params)
 
@@ -217,13 +220,13 @@ export default {
 
                   on: {
                     click: () => {
-                      this.cancel();
+                      this.cancel()
                     }
                   }
                 },
                 "删除"
               )
-            ]);
+            ])
           }
         }
       ]

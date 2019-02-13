@@ -48,6 +48,19 @@
       </Form>
     </Modal>
     
+    <Modal
+      v-model="deleteServiceWindow"
+      title="删除服务"
+      width="500"
+      :loading="loading"
+      @on-ok="deleteServiceConfirm('toDeleteService')"
+      @on-cancel="delServiceCancel" 
+    >
+    确认删除服务：{{toDeleteService.name}} ？
+   </Modal>
+
+
+
   </div>
 </template>
 <script>
@@ -64,31 +77,40 @@ export default {
         retries:'5',
         protocol:'',
         host:'',
-        port:'',
+        port:'80',
         path:'',
         connect_timeout:'60000',
         write_timeout:'60000',
         read_timeout:'60000'
       },
       serviceValidate: {
+
+        name: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+
         retries: [
           {
             required: true,
-            message: "cannot be empty",
+            message: "不能为空",
             trigger: "blur"
           }
         ],
         protocol: [
           {
             required: true,
-            message: "cannot be empty",
+            message: "不能为空",
             trigger: "blur"
           }
         ],
         host: [
           {
             required: true,
-            message: "cannot be empty",
+            message: "不能为空",
             trigger: "blur"
           }
         ],        
@@ -96,7 +118,7 @@ export default {
         port: [
           {
             required: true,
-            message: "cannot be empty",
+            message: "不能为空",
             trigger: "blur"
           }
         ],      
@@ -104,21 +126,21 @@ export default {
         connect_timeout: [
           {
             required: true,
-            message: "cannot be empty",
+            message: "不能为空",
             trigger: "blur"
           }
         ],            
         write_timeout: [
           {
             required: true,
-            message: "cannot be empty",
+            message: "不能为空",
             trigger: "blur"
           }
         ],    
         read_timeout: [
           {
             required: true,
-            message: "cannot be empty",
+            message: "不能为空",
             trigger: "blur"
           }
         ]                
@@ -131,62 +153,49 @@ export default {
       addServiceWindow: false,
       loading:true,
 
+      deleteServiceWindow:false,
+
+      toDeleteService:{
+      name:'',
+      id:''
+    },
+
+
       servicesdata: [],
 
       services: [
         {
-          title: "名称",
-
-          key: "name"
+          title: "服务名称",
+          key: "name",
+            width: 150
         },
 
-        {
-          title: "ID",
-          key: "id",
+        // {
+        //   title: "ID",
+        //   key: "id",
 
-          width: 290
-        },
-        {
-          title: "服务器",
-
-          key: "host",
-
-          width: 200
-        },
+        //   width: 290
+        // },
 
         {
-          title: "链接超时",
-
-          key: "connect_timeout",
-
-          width: 100
-        },
-
-        {
-          title: "协议",
+          title: "服务协议",
 
           key: "protocol",
 
           width: 90
-        },
+        },        {
+          title: "服务地址",
 
-        {
-          title: "读取超时",
+          key: "host",
 
-          key: "read_timeout",
-
-          width: 90
-        },
-
-        {
+          width: 200
+        },        {
           title: "端口",
 
           key: "port",
 
           width: 100
-        },
-
-        {
+        },        {
           title: "路径",
 
           key: "path",
@@ -194,33 +203,57 @@ export default {
           width: 100
         },
         {
-          title: "更新时间",
-
-          key: "updated_at",
-
-          width: 100
-        },
-        {
-          title: "创建时间 ",
-
-          key: "created_at",
-
-          width: 100
-        },
-
-        {
-          title: "重试",
+          title: "重试次数",
 
           key: "retries",
           width: 90
         },
+                {
+          title: "链接超时",
 
+          key: "connect_timeout",
+
+          width: 100
+        },
+        {
+          title: "读取超时",
+
+          key: "read_timeout",
+
+          width: 90
+        },
         {
           title: "写超时",
 
           key: "write_timeout",
 
           width: 90
+        },
+
+
+        {
+          title: "更新时间",
+
+          key: "updated_at",
+
+          width: 170,
+                    render:(h,params) =>{               
+               //console.log(params)
+              return h("span",{},kongadmin.changeDatetoString(params.row.updated_at))
+
+          }
+        },
+        {
+          title: "创建时间 ",
+
+          key: "created_at",
+
+          width: 170,
+          render:(h,params) =>{               
+               //console.log(params)
+              return h("span",{},kongadmin.changeDatetoString(params.row.created_at))
+
+          }
         },
 
         {
@@ -274,7 +307,7 @@ export default {
 
                   on: {
                     click: () => {
-                      this.deleteService()
+                      this.deleteService(params.row)
                       //this.cancel();
                     }
                   }
@@ -289,20 +322,7 @@ export default {
   },
   created: function() {
 
-    var recallhandler = function(response, component) {
-      if(response.status == 200 || response.status == 201){
-      component.servicesdata = response.data.data;
-      }
-      else{
-      component.$refs.noticeinformation.showalert(
-        "error",
-        response.data
-      )
-      }
-
-    }
-
-    kongadmin.getServices(recallhandler, recallhandler, this);
+    this.queryServices()
 
   },
 
@@ -320,27 +340,17 @@ export default {
       // check form before confirm post.
               this.$refs[name].validate((valid) => {
                     if (valid) {
-                        this.$Message.success('Success!')
-                      kongadmin.addService(this.serviceform,recallhandler, recallhandler, this);
+
+                      var formdata = JSON.stringify(this.serviceform)
+                      formdata = JSON.parse(formdata)
+                      this.convertToPostJson(formdata)
+
+                      kongadmin.addService(formdata,this.recallhandler, this.recallhandler, this);
                     } else {
-                        this.$Message.error('Fail!')
-                        console.log("what 's up?")   
+                        this.$Message.error('请输入必填参数')
                         this.changeLoading()                     
                     }
-                })
-
-      var recallhandler = function(response, component) {
-      if(response.code == 200 || response.code == 201){
-            this.created()
-      }
-      else{
-      component.$refs.noticeinformation.showalert(
-        "error",
-        "kong 有异常请尽快修复"
-      )
-      }
-
-    }           
+                })     
 
     },
 
@@ -353,6 +363,14 @@ export default {
 
     addServiceCancel(){
 
+    },
+    deleteServiceConfirm(serviceName){
+
+       kongadmin.deleteService(this.toDeleteService.id,this.recallhandler, this.recallhandler, this);
+
+    },
+
+    delServiceCancel(){
 
     }
   ,
@@ -361,9 +379,67 @@ export default {
   },
   deleteService(params){
 
+     console.log(params)
+     this.toDeleteService.name = params.name
+     this.toDeleteService.id = params.id
+      this.deleteServiceWindow = true
+
+  },
+  convertToPostJson(data)  // remove null values and convert integer string to integer
+  {
+
+               Object.keys(data).forEach(function(key) {
+                
+                if(data[key] == null )  delete data[key]
+                if(!isNaN(data[key]))  data[key] = parseInt(data[key])
+                  
+              })
+                                        
   }
+  ,
+  recallhandler(response, component){
+        console.log(response)
+
+      if(response.status == 200 || response.status == 201 || response.status == 204){
+        console.log(component)
+            component.queryServices()            
+      }
+      else{
+
+      component.$refs.noticeinformation.showalert(
+        "error",
+        response.data.message
+      )
+      }
+        component.addServiceWindow = false
+        component.deleteServiceWindow = false
+
+    }
+
+  ,
+  
+  queryServices(){
+
+    var queryrecallhandler = function(response, component) {
+      if(response.status == 200 ){
+      component.servicesdata = response.data.data;
+      }
+      else{
+      component.$refs.noticeinformation.showalert(
+        "error",
+        response.data
+      )
+      }
+
+    }
+
+    kongadmin.getServices(queryrecallhandler, queryrecallhandler, this);
+
   }
-};
+
+
+  }
+}
 </script>
 <style scoped>
 code {
