@@ -1,7 +1,7 @@
 <template>
   <div>
     <noticeinformation ref="noticeinformation"></noticeinformation>
-    <Button type="primary" @click="openAddServiceForm">添加服务</Button>
+    <Button type="primary" @click="queryServices">刷新列表</Button> <Button type="primary" @click="openAddServiceForm">添加服务</Button>
     <br><br>
     <Table border :columns="services" :data="servicesdata"></Table>
 
@@ -10,8 +10,8 @@
       title="添加服务"
       width="700"
       :loading="loading"
-      @on-ok="addServiceConfirm('serviceform')"
-      @on-cancel="addServiceCancel" 
+      @on-ok="addOrUpdateServiceConfirm('serviceform')"
+      @on-cancel="addOrUpdateServiceCancel" 
     >
       <Form ref="serviceform" :model="serviceform" :rules="serviceValidate" :label-width="150" >
         <FormItem prop="name" label="服务名称">
@@ -72,9 +72,11 @@ export default {
 
   data() {
     return {
+      serviceformDefault:null,
       serviceform: {
-        name: "",
+        name: '',
         retries:'5',
+       // id:null,
         protocol:'',
         host:'',
         port:'80',
@@ -151,11 +153,14 @@ export default {
       ],
 
       addServiceWindow: false,
+      isAddService:false,
       loading:true,
-
       deleteServiceWindow:false,
-
       toDeleteService:{
+      name:'',
+      id:''
+    },
+    toUpdateService:{
       name:'',
       id:''
     },
@@ -284,7 +289,7 @@ export default {
                   on: {
                     click: () => {
 
-                      this.updateService()
+                      this.openUpdateServiceForm(params)
                       //this.addServiceWindow = true; //this.ok(params)
                     }
                   }
@@ -307,7 +312,7 @@ export default {
 
                   on: {
                     click: () => {
-                      this.deleteService(params.row)
+                      this.openDeleteServiceConfirm(params.row)
                       //this.cancel();
                     }
                   }
@@ -321,6 +326,7 @@ export default {
     };
   },
   created: function() {
+    this.serviceformDefault = JSON.stringify(this.serviceform)
 
     this.queryServices()
 
@@ -333,24 +339,39 @@ export default {
     },
 
     openAddServiceForm() {
-      this.addServiceWindow = true;
+      this.addServiceWindow = true
+      this.isAddService=true
     },
-    addServiceConfirm(name){
+    addOrUpdateServiceConfirm(serviceform){
 
+      
       // check form before confirm post.
-              this.$refs[name].validate((valid) => {
+              this.$refs[serviceform].validate((valid) => {
                     if (valid) {
 
                       var formdata = JSON.stringify(this.serviceform)
                       formdata = JSON.parse(formdata)
                       this.convertToPostJson(formdata)
 
+
+                      if(this.isAddService)
                       kongadmin.addService(formdata,this.recallhandler, this.recallhandler, this);
+
+                      else
+                      {
+                        console.log(this.toUpdateService.id)
+                        console.log(formdata)
+                        kongadmin.updateService(this.toUpdateService.id,formdata,this.recallhandler, this.recallhandler, this);
+                      }
+
                     } else {
                         this.$Message.error('请输入必填参数')
                         this.changeLoading()                     
                     }
                 })     
+
+
+
 
     },
 
@@ -361,23 +382,42 @@ export default {
             });
           },
 
-    addServiceCancel(){
-
+    addOrUpdateServiceCancel(){
+        this._reset()
     },
-    deleteServiceConfirm(serviceName){
 
+    deleteServiceConfirm(serviceName){
+       
        kongadmin.deleteService(this.toDeleteService.id,this.recallhandler, this.recallhandler, this);
 
     },
 
     delServiceCancel(){
-
+        this._reset()
     }
   ,
-  updateService(params){
+  openUpdateServiceForm(params){
+
+    this.isAddService=false
+    this.addServiceWindow = true
+
+    this.toUpdateService.name = params.row.name
+    this.toUpdateService.id = params.row.id
+
+    this.serviceform.retries = params.row.retries+''
+    this.serviceform.name = params.row.name
+    this.serviceform.protocol = params.row.protocol
+    this.serviceform.host = params.row.host
+    this.serviceform.port = params.row.port+''
+    this.serviceform.path = params.row.path
+    this.serviceform.connect_timeout = params.row.connect_timeout+''
+    this.serviceform.write_timeout = params.row.write_timeout+''
+    this.serviceform.read_timeout = params.row.read_timeout+''
+
+
 
   },
-  deleteService(params){
+  openDeleteServiceConfirm(params){
 
      console.log(params)
      this.toDeleteService.name = params.name
@@ -398,7 +438,8 @@ export default {
   }
   ,
   recallhandler(response, component){
-        console.log(response)
+      
+      //console.log(response)
 
       if(response.status == 200 || response.status == 201 || response.status == 204){
         console.log(component)
@@ -413,10 +454,16 @@ export default {
       }
         component.addServiceWindow = false
         component.deleteServiceWindow = false
+        component._reset()
 
     }
 
   ,
+
+  _reset(){
+       this.serviceform = JSON.parse(this.serviceformDefault)
+    
+  },
   
   queryServices(){
 

@@ -43,8 +43,8 @@ export default {
     deleteService: function (serviceId,success, fail, handlervueComponent) {
         this.httpdelete('/services/'+serviceId, success, fail, handlervueComponent)
     },
-    updateService: function (postbody,success, fail, handlervueComponent) {
-        this.httpput('/services/', postbody,success, fail, handlervueComponent)
+    updateService: function (service,postbody,success, fail, handlervueComponent) {
+        this.httpput('/services/'+service, postbody,success, fail, handlervueComponent)
     },    
     addService: function (postbody,success, fail, handlervueComponent) {
         this.httppost('/services/',postbody, success, fail, handlervueComponent)
@@ -96,8 +96,9 @@ export default {
             })
     }
     , httpput: function (uri, requestBody,success, fail, handlervueComponent) {
-        
+
         var responseBody = { status: null, data: '' }  
+        var header = null
 
         if ( typeof requestBody === 'string'){
 
@@ -110,9 +111,11 @@ export default {
         Vue.axios
             .put(this.kongadminUri + uri, requestBody, header)
             .then(response => {
+
                 this.handleHttpResponse(responseBody,response,success,fail,handlervueComponent)
             })
             .catch(e => {
+
                 this.handleHttpException(responseBody,e,fail,handlervueComponent)
             })
     },
@@ -171,15 +174,17 @@ export default {
         returnResponseToClient.data = exception
         failHandler(returnResponseToClient, handlervueComponent)
 
-
-
     },
 
     changeDatetoString(date) {
         
-         date = date +''+'000'
+         date = date +''
+        // console.log(date.length+ '-------')
+         if(date.length < 13) {
+             date = date+'000'
+         }
         //console.log(date+''+'000')
-        console.log(date)
+        //console.log(date)
         return new Date(parseInt(date)).toLocaleString();
       },
 
