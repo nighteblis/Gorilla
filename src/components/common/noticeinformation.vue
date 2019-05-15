@@ -27,7 +27,7 @@ export default {
         }
       },
       msg: "noticeinformation"
-    };
+    }
   },
   methods: {
     showalert(alert, message) {
