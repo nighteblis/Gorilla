@@ -1,17 +1,27 @@
 <template>
   <div>
     <noticeinformation ref="noticeinformation"></noticeinformation>
+<<<<<<< HEAD
     <Button type="primary" @click="openAddServiceForm">添加服务</Button>
     <br>
     <br>
+=======
+    <Button type="primary" @click="queryServices">刷新列表</Button> <Button type="primary" @click="openAddServiceForm">添加服务</Button>
+    <br><br>
+>>>>>>> f7f292524003b4119190e0643959ea65f169874e
     <Table border :columns="services" :data="servicesdata"></Table>
     <Modal
       v-model="addServiceWindow"
       title="添加服务"
       width="700"
       :loading="loading"
+<<<<<<< HEAD
       @on-ok="addServiceConfirm('serviceform')"
       @on-cancel="addServiceCancel"
+=======
+      @on-ok="addOrUpdateServiceConfirm('serviceform')"
+      @on-cancel="addOrUpdateServiceCancel" 
+>>>>>>> f7f292524003b4119190e0643959ea65f169874e
     >
       <Form ref="serviceform" :model="serviceform" :rules="serviceValidate" :label-width="150">
         <FormItem prop="name" label="服务名称">
@@ -62,7 +72,9 @@ export default {
   description: "",
   data() {
     return {
+      serviceformDefault:null,
       serviceform: {
+<<<<<<< HEAD
         name: "",
         retries: "5",
         protocol: "",
@@ -72,6 +84,18 @@ export default {
         connect_timeout: "60000",
         write_timeout: "60000",
         read_timeout: "60000"
+=======
+        name: '',
+        retries:'5',
+       // id:null,
+        protocol:'',
+        host:'',
+        port:'80',
+        path:'',
+        connect_timeout:'60000',
+        write_timeout:'60000',
+        read_timeout:'60000'
+>>>>>>> f7f292524003b4119190e0643959ea65f169874e
       },
       serviceValidate: {
         name: [
@@ -136,12 +160,18 @@ export default {
         { value: "https", label: "https" }
       ],
       addServiceWindow: false,
-      loading: true,
-      deleteServiceWindow: false,
-      toDeleteService: {
-        name: "",
-        id: ""
-      },
+      isAddService:false,
+      loading:true,
+      deleteServiceWindow:false,
+      toDeleteService:{
+      name:'',
+      id:''
+    },
+    toUpdateService:{
+      name:'',
+      id:''
+    },
+
       servicesdata: [],
       services: [
         {
@@ -240,7 +270,12 @@ export default {
                   },
                   on: {
                     click: () => {
+<<<<<<< HEAD
                       this.updateService();
+=======
+
+                      this.openUpdateServiceForm(params)
+>>>>>>> f7f292524003b4119190e0643959ea65f169874e
                       //this.addServiceWindow = true; //this.ok(params)
                     }
                   }
@@ -259,7 +294,11 @@ export default {
                   },
                   on: {
                     click: () => {
+<<<<<<< HEAD
                       this.deleteService(params.row);
+=======
+                      this.openDeleteServiceConfirm(params.row)
+>>>>>>> f7f292524003b4119190e0643959ea65f169874e
                       //this.cancel();
                     }
                   }
@@ -273,15 +312,24 @@ export default {
     };
   },
   created: function() {
+<<<<<<< HEAD
     this.queryServices();
+=======
+    this.serviceformDefault = JSON.stringify(this.serviceform)
+
+    this.queryServices()
+
+>>>>>>> f7f292524003b4119190e0643959ea65f169874e
   },
   methods: {
     changeDatetoString(date) {
       return new Date(date);
     },
     openAddServiceForm() {
-      this.addServiceWindow = true;
+      this.addServiceWindow = true
+      this.isAddService=true
     },
+<<<<<<< HEAD
     addServiceConfirm(name) {
       // check form before confirm post.
       this.$refs[name].validate(valid => {
@@ -300,8 +348,42 @@ export default {
           this.changeLoading();
         }
       });
+=======
+    addOrUpdateServiceConfirm(serviceform){
+
+      
+      // check form before confirm post.
+              this.$refs[serviceform].validate((valid) => {
+                    if (valid) {
+
+                      var formdata = JSON.stringify(this.serviceform)
+                      formdata = JSON.parse(formdata)
+                      this.convertToPostJson(formdata)
+
+
+                      if(this.isAddService)
+                      kongadmin.addService(formdata,this.recallhandler, this.recallhandler, this);
+
+                      else
+                      {
+                        console.log(this.toUpdateService.id)
+                        console.log(formdata)
+                        kongadmin.updateService(this.toUpdateService.id,formdata,this.recallhandler, this.recallhandler, this);
+                      }
+
+                    } else {
+                        this.$Message.error('请输入必填参数')
+                        this.changeLoading()                     
+                    }
+                })     
+
+
+
+
+>>>>>>> f7f292524003b4119190e0643959ea65f169874e
     },
     changeLoading() {
+<<<<<<< HEAD
       this.loading = false;
       this.$nextTick(() => {
         this.loading = true;
@@ -346,6 +428,108 @@ export default {
           "error",
           response.data.message
         );
+=======
+            this.loading = false;
+            this.$nextTick(() => {
+              this.loading = true;
+            });
+          },
+
+    addOrUpdateServiceCancel(){
+        this._reset()
+    },
+
+    deleteServiceConfirm(serviceName){
+       
+       kongadmin.deleteService(this.toDeleteService.id,this.recallhandler, this.recallhandler, this);
+
+    },
+
+    delServiceCancel(){
+        this._reset()
+    }
+  ,
+  openUpdateServiceForm(params){
+
+    this.isAddService=false
+    this.addServiceWindow = true
+
+    this.toUpdateService.name = params.row.name
+    this.toUpdateService.id = params.row.id
+
+    this.serviceform.retries = params.row.retries+''
+    this.serviceform.name = params.row.name
+    this.serviceform.protocol = params.row.protocol
+    this.serviceform.host = params.row.host
+    this.serviceform.port = params.row.port+''
+    this.serviceform.path = params.row.path
+    this.serviceform.connect_timeout = params.row.connect_timeout+''
+    this.serviceform.write_timeout = params.row.write_timeout+''
+    this.serviceform.read_timeout = params.row.read_timeout+''
+
+
+
+  },
+  openDeleteServiceConfirm(params){
+
+     console.log(params)
+     this.toDeleteService.name = params.name
+     this.toDeleteService.id = params.id
+      this.deleteServiceWindow = true
+
+  },
+  convertToPostJson(data)  // remove null values and convert integer string to integer
+  {
+
+               Object.keys(data).forEach(function(key) {
+                
+                if(data[key] == null )  delete data[key]
+                if(!isNaN(data[key]))  data[key] = parseInt(data[key])
+                  
+              })
+                                        
+  }
+  ,
+  recallhandler(response, component){
+      
+      //console.log(response)
+
+      if(response.status == 200 || response.status == 201 || response.status == 204){
+        console.log(component)
+            component.queryServices()            
+      }
+      else{
+
+      component.$refs.noticeinformation.showalert(
+        "error",
+        response.data.message
+      )
+      }
+        component.addServiceWindow = false
+        component.deleteServiceWindow = false
+        component._reset()
+
+    }
+
+  ,
+
+  _reset(){
+       this.serviceform = JSON.parse(this.serviceformDefault)
+    
+  },
+  
+  queryServices(){
+
+    var queryrecallhandler = function(response, component) {
+      if(response.status == 200 ){
+      component.servicesdata = response.data.data;
+      }
+      else{
+      component.$refs.noticeinformation.showalert(
+        "error",
+        response.data
+      )
+>>>>>>> f7f292524003b4119190e0643959ea65f169874e
       }
       component.addServiceWindow = false;
       component.deleteServiceWindow = false;

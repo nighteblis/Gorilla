@@ -28,7 +28,7 @@
 
         <Submenu name="1">
           <template slot="title">
-            <Icon type="ios-people"/>应用
+            <Icon type="ios-people"/>Kong网关信息
           </template>
        <!--   <MenuGroup title="vhosts管理"> -->
             <MenuItem
@@ -42,7 +42,7 @@
 
         <Submenu name="2">
           <template slot="title">
-            <Icon type="logo-usd"/>底层接口
+            <Icon type="logo-usd"/>服务管理
           </template>
           <MenuItem
             v-for="lowapis in menutiems.lowlevel"
@@ -166,12 +166,6 @@ export default {
 
       console.log(labelname)
 
-      // if (this.tabs.length == 0) {
-      //   this.tabs.push({ display: true, component: event, label: labelname })
-      //   console.log("returned when length == 0 ")
-      //   return
-      // }
-
       var thiz = this
       this.tabs.forEach(function(element) {
         console.log(element.component + "----" + event)
@@ -191,13 +185,6 @@ export default {
       }
 
       this.activeTab = event
-
-      // if (this.$refs.tabPanes.length > 0) {
-      //   console.log('length greater than  0')
-      //   this.$refs.tabPanes[0].$parent.activeKey = event
-      // } else {
-      //   console.log('length equal 0')
-      // }
 
     },
 

@@ -62,11 +62,11 @@
   </div>
 </template>
 <script>
-import kongadmin from "@/utils/kongadmin";
+import kongadmin from '@/utils/kongadmin'
 
 export default {
-  name: "pluginmgmt",
-  description: "",
+  name: 'pluginmgmt',
+  description: '',
 
   data() {
     return {
@@ -74,21 +74,21 @@ export default {
       pluginformTitle:'添加插件',
       pluginform: {
         consumer: {
-          placeholder: "请选择要应用的消费者",
-          value: "",
-          key: "consumer_id"
+          placeholder: '请选择要应用的消费者',
+          value: '',
+          key: 'consumer_id'
         },
-        pluginConfig: { placeholder: "config.xxx=", value: "", key: "" },
-        plugin: { placeholder: "请选择要添加的插件", value: "", key: "name" },
+        pluginConfig: { placeholder: 'config.xxx=', value: '', key: '' },
+        plugin: { placeholder: '请选择要添加的插件', value: '', key: 'name' },
         service: {
-          placeholder: "请选择要应用的服务",
-          value: "",
-          key: "service_id"
+          placeholder: '请选择要应用的服务',
+          value: '',
+          key: 'service_id'
         },
         router: {
-          placeholder: "请选择要应用的路由",
-          value: "",
-          key: "route_id"
+          placeholder: '请选择要应用的路由',
+          value: '',
+          key: 'route_id'
         }
       },
 
@@ -97,100 +97,107 @@ export default {
 
       services: [
         {
-          title: "名称",
+          title: '名称',
 
-          key: "name"
+          key: 'name',
+          width:170
         },
 
+        // {
+        //   title: 'ID',
+        //   key: 'id',
+
+        //   width: 290
+        // },
+
         {
-          title: "ID",
-          key: "id",
+          title: '是否启用',
 
-          width: 290
-        },
-
-        {
-          title: "是否启用",
-
-          key: "enabled",
+          key: 'enabled',
 
           width: 100
         },
 
         {
-          title: "路由Id",
+          title: '路由Id',
 
-          key: "route_id",
-
-          width: 90
-        },
-
-        {
-          title: "服务Id",
-
-          key: "service_id",
+          key: 'route_id',
 
           width: 90
         },
 
         {
-          title: "消费者Id",
+          title: '服务Id',
 
-          key: "consumer_id",
+          key: 'service_id',
+
+          width: 90
+        },
+
+        {
+          title: '消费者Id',
+
+          key: 'consumer_id',
 
           width: 100
         },
 
         {
-          title: "配置内容",
+          title: '配置内容',
 
-          key: "config",
+          key: 'config',
 
           width: 300
         },
-        {
-          title: "更新时间",
+        // {
+        //   title: '更新时间',
 
-          key: "updated_at",
+        //   key: 'updated_at',
+
+        //   width: 100,
+        //             render:(h,params) =>{               
+        //        //console.log(params)
+        //       return h('span',{},kongadmin.changeDatetoString(params.row.updated_at))
+
+        //   }
+        // },
+        {
+          title: '创建时间 ',
+
+          key: 'created_at',
 
           width: 100,
-          render:(h,params) =>{
-              return h("span",{},params.rows.updated_at )
+          render:(h,params) =>{               
+               //console.log(params)
+              return h('span',{},kongadmin.changeDatetoString(params.row.created_at))
 
           }
         },
-        {
-          title: "创建时间 ",
-
-          key: "created_at",
-
-          width: 100
-        },
 
         {
-          title: "操作",
+          title: '操作',
 
-          key: "action",
+          key: 'action',
 
           width: 150,
 
-          align: "center",
+          align: 'center',
 
-          fixed: "right",
+          fixed: 'right',
 
           render: (h, params) => {
-            return h("div", [
+            return h('div', [
               h(
-                "Button",
+                'Button',
                 {
                   props: {
-                    type: "primary",
+                    type: 'primary',
 
-                    size: "small"
+                    size: 'small'
                   },
 
                   style: {
-                    marginRight: "5px"
+                    marginRight: '5px'
                   },
 
                   on: {
@@ -202,20 +209,20 @@ export default {
                     }
                   }
                 },
-                "更新"
+                '更新'
               ),
 
               h(
-                "Button",
+                'Button',
                 {
                   props: {
-                    type: "primary",
+                    type: 'primary',
 
-                    size: "small"
+                    size: 'small'
                   },
 
                   style: {
-                    marginRight: "5px"
+                    marginRight: '5px'
                   },
 
                   on: {
@@ -224,41 +231,41 @@ export default {
                     }
                   }
                 },
-                "删除"
+                '删除'
               )
             ])
           }
         }
       ]
-    };
+    }
   },
   created: function() {
-    console.log(" plugin mgmt created");
+    console.log(' plugin mgmt created')
 
     var success = function(response, component) {
-      console.log(component);
-      component.servicesdata = response.data.data;
-    };
+      console.log(component)
+      component.servicesdata = response.data.data
+    }
 
     var fail = function(response, component) {
-      console.log("fail function");
-      console.log(response);
+      console.log('fail function')
+      console.log(response)
       component.$refs.noticeinformation.showalert(
-        "error",
-        "kong 有异常请尽快修复"
-      );
-    };
-    kongadmin.getPlugins(success, fail, this);
+        'error',
+        'kong 有异常请尽快修复'
+      )
+    }
+    kongadmin.getPlugins(success, fail, this)
   },
 
   methods: {
     addPluginConfirm() {
-      var uri = this.$store.state.kongAdmin + "/plugins/";
+      var uri = this.$store.state.kongAdmin + '/plugins/'
 
-      console.log("consumer value: " + this.pluginform.consumer.value);
-      console.log(this.pluginform);
-      console.log("====");
-      console.log(this.$refs);
+      console.log('consumer value: ' + this.pluginform.consumer.value)
+      console.log(this.pluginform)
+      console.log('====')
+      console.log(this.$refs)
 
       // var s1= this.serviceId === '' ?  '' : 'service_id='+this.serviceId
       // var s2= this.routeId === '' ?  '' : 'route_id='+this.routeId
@@ -266,53 +273,53 @@ export default {
       // var s4= this.pluginName === '' ? '':'name='+this.pluginName
       // var s5=this.pluginConfig === '' ? '':this.pluginConfig
 
-      console.log(uri);
+      console.log(uri)
 
       this.axios
         .post(uri, this.checkAndGenerateWwwData(this.pluginform), {
-          headers: { "content-type": "application/x-www-form-urlencoded" }
+          headers: { 'content-type': 'application/x-www-form-urlencoded' }
         })
         .then(response => {
-          console.log(response);
+          console.log(response)
 
           if (response.data.status != 0) {
-            this.$Message.info("添加插件出错");
+            this.$Message.info('添加插件出错')
           } else {
-            if (!showoriginalalert) this.$Message.info("添加成功");
+            if (!showoriginalalert) this.$Message.info('添加成功')
           }
         })
         .catch(e => {
-          console.log(e);
-          this.$Message.info("添加插件出错");
-        });
+          console.log(e)
+          this.$Message.info('添加插件出错')
+        })
 
-      //this.$Message.info("Clicked ok")
+      //this.$Message.info('Clicked ok')
     },
     addPluginCancel() {
-      this.$Message.info("Clicked cancel");
+      this.$Message.info('Clicked cancel')
     },
     ok() {
-      this.$Message.info("Clicked ok");
+      this.$Message.info('Clicked ok')
     },
     cancel() {
-      this.$Message.info("Clicked cancel");
+      this.$Message.info('Clicked cancel')
     },
     changeDatetoString(date) {
       return new Date(date)
     },
     addPlugin() {
-      console.log("add plugin...")
+      console.log('add plugin...')
       this.pluginformWindow = true
     },
 
     checkAndGenerateWwwData(formdata) {
 
-       var returnstring = ""
+       var returnstring = ''
        var i = 0
       Object.keys(formdata).forEach(function(key) {
-        var valueObject = formdata[key];
+        var valueObject = formdata[key]
         
-        console.log(valueObject);
+        console.log(valueObject)
         if ( valueObject.value == null || valueObject.value === '' ) {
           
         } 
@@ -322,19 +329,19 @@ export default {
           
         }
         else {
-          if (i === 0) returnstring += valueObject.key +"="+ valueObject.value 
-          else returnstring += "&" + valueObject.key +"="+ valueObject.value
+          if (i === 0) returnstring += valueObject.key +'='+ valueObject.value 
+          else returnstring += '&' + valueObject.key +'='+ valueObject.value
         }
 
         i++        
+       }
+       )
 
-      })
-
-      console.log((returnstring = returnstring.replace(/^&+|&+$/g, "")));
-      return returnstring;
+      console.log((returnstring = returnstring.replace(/^&+|&+$/g, '')))
+      return returnstring
     }
   }
-};
+}
 </script>
 <style scoped>
 code {
